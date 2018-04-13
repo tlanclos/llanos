@@ -1,0 +1,4 @@
+CROSS_COMPILE ?=
+ARCH ?= x86
+export CROSS_COMPILE
+export ARCH

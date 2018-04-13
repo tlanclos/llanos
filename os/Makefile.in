@@ -1,0 +1,36 @@
+REPO_ROOT := $(shell git rev-parse --show-toplevel)
+include $(REPO_ROOT)/Defaults.in
+
+SUBDIRS ?=
+SOURCES ?=
+
+OBJECTS := $(SOURCES:%.c=%.o)
+DEPENDENCIES := $(SOURCES:%=%.d)
+
+all: build
+
+build: $(SUBDIRS) $(OBJECTS)
+
+$(SUBDIRS):%: FORCE
+	@$(MAKE) -C $@ build
+
+$(DEPENDENCIES):%.d: %
+	@echo "	DEP	$@"
+	@$(CROSS_COMPILE)gcc $(CFLAGS) -MM $< > $@
+
+$(OBJECTS):%.o: %.c
+	@echo "	CC	$@"
+	@$(CROSS_COMPILE)gcc -c -o $@ $(CFLAGS) $<
+
+$(SUBDIRS:%=clean-%):%: FORCE
+	@$(MAKE) -C `echo $@ | cut -d- -f2-` clean
+
+clean: $(SUBDIRS:%=clean-%)
+	@-rm -f $(OBJECTS)
+	@-rm -f $(DEPENDENCIES)
+
+FORCE:
+
+ifneq ($(MAKECMDGOALS),clean)
+-include $(DEPENDENCIES)
+endif

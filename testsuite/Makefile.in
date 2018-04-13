@@ -1,0 +1,64 @@
+REPO_ROOT := $(shell git rev-parse --show-toplevel)
+include $(REPO_ROOT)/Defaults.in
+
+SUBDIRS ?= 
+TEST_SOURCES ?=
+TEST_DEP_SOURCES ?=
+
+TEST_DEP_SOURCES += $(wildcard $(REPO_ROOT)/testsuite/framework/*.c)
+
+TEST_OBJECTS := $(TEST_SOURCES:%.c=%.o)
+TEST_DEP_OBJECTS := $(TEST_DEP_SOURCES:%.c=%.o)
+
+DEPENDENCIES := $(TEST_SOURCES:%=%.d)
+
+CFLAGS += -Wall
+CFLAGS += -Wextra
+CFLAGS += -Werror
+CFLAGS += -I$(REPO_ROOT)/include
+CFLAGS += -I$(REPO_ROOT)/testsuite/include
+
+all: build
+
+build: $(SUBDIRS) $(TEST_OBJECTS:%.o=%)
+
+$(SUBDIRS):%: FORCE
+	@$(MAKE) -C $@ build
+
+$(TEST_DEP_OBJECTS):%.o: FORCE
+	@$(MAKE) -C $(@D) $(@F)
+
+$(DEPENDENCIES):%.d: %
+	@echo "	DEP	$@"
+	@$(CC) $(CFLAGS) -MM $< > $@
+
+$(TEST_OBJECTS:%.o=%):%: %.o $(TEST_DEP_OBJECTS)
+	@echo "	LD	$@"
+	@$(CC) -o $@ $(CFLAGS) $^ -lgcc
+
+$(TEST_OBJECTS):%.o: %.c
+	@echo "	CC	$@"
+	@$(CC) -c -o $@ $(CFLAGS) $<
+
+$(SUBDIRS:%=run-%):%: FORCE
+	@$(MAKE) -C `echo $@ | cut -d- -f2-` run
+
+$(TEST_OBJECTS:%.o=run-%): $(TEST_OBJECTS:%.o=%)
+	@echo "	TST	`echo $@ | cut -d- -f2-`"
+	@./`echo $@ | cut -d- -f2-`
+
+run: $(SUBDIRS:%=run-%) $(TEST_OBJECTS:%.o=run-%)
+
+$(SUBDIRS:%=clean-%):%: FORCE
+	@$(MAKE) -C `echo $@ | cut -d- -f2-` clean
+
+clean: $(SUBDIRS:%=clean-%)
+	@-rm -f $(TEST_OBJECTS)
+	@-rm -f $(TEST_OBJECTS:%.o=%)
+	@-rm -f $(DEPENDENCIES)
+
+FORCE:
+
+ifneq ($(MAKECMDGOALS),clean)
+-include $(DEPENDENCIES)
+endif

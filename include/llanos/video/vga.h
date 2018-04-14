@@ -67,8 +67,11 @@ extern uint16_t* vga_get_default_buffer_address(void);
  * in the vga to their defaults.
  *
  * @param vga vga to initialize.
+ * @param buffer_address address to set as the base address of the VGA buffer;
+ * @param width width of the terminal.
+ * @param height height of the terminal.
  */
-extern void vga_initialize(vga_t* vga);
+extern void vga_initialize(vga_t* vga, uint16_t* buffer_address, size_t width, size_t height);
 
 /**
  * Put a single colored character into the vga.

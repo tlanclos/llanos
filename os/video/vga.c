@@ -12,8 +12,21 @@ uint16_t* vga_get_default_buffer_address(void) {
     return 0xb8000;
 }
 
-void vga_initialize(vga_t* vga, uint16_t* buffer_addres, size_t width, size_t height) {
+void vga_initialize(vga_t* vga, uint16_t* buffer_address, size_t width, size_t height) {
+    size_t row;
+    size_t col;
 
+    vga->buffer_address = buffer_address;
+    vga->terminal_width = width;
+    vga->terminal_height = height;
+    vga->cursor_row = 0;
+    vga->cursor_col = 0;
+
+    for (col = 0; col < width; col++) {
+        for (row = 0; row < height; row++) {
+            *buffer_address++ = 0;
+        }
+    }
 }
 
 void vga_put_character(vga_t* vga, vga_color_t color, char c) {

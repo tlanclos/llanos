@@ -38,7 +38,7 @@ static void test_vga_initialize__should__clear_buffer(void) {
     }
 
     vga_initialize(&vga, buffer, vga_get_default_terminal_width(), vga_get_default_terminal_height());
-    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, vga.buffer_address, length);
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
 }
 
 static void test_vga_initialize__should__reset_cursor_row(void) {
@@ -94,16 +94,188 @@ static void test_vga_put_character__should__put_background_color_with_character(
     TEST_ASSERT_EQUAL(__extract_vga_color_bg(buffer[1]), VGA_COLOR_RED);
 }
 
-static void test_vga_put_character__should__newline_should_wrap(void) {
+static void test_vga_put_character__should__wrap_on_newlines(void) {
+    vga_t vga;
+    int width = 5;
+    int height = 3;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'a', '\0', '\0', '\0', '\0',
+        'b', '\0', '\0', '\0', '\0',
+        'c', '\0', '\0', '\0', '\0'
+    };
+    vga_initialize(&vga, buffer, width, height);
 
+    /* 
+     * setting the color to black ensures that the data in the buffer should
+     * only be the character and no color information. 
+     */
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'a');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'b');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'c');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+}
+
+static void test_vga_put_character__should__wrap_to_top_at_end_of_buffer_with_newlines(void) {
+    vga_t vga;
+    int width = 5;
+    int height = 3;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'f', ' ',  'c',  '\0', '\0',
+        'd', '\0', '\0', '\0', '\0',
+        'e', '\0', '\0', '\0', '\0'
+    };
+    vga_initialize(&vga, buffer, width, height);
+
+    /* 
+     * setting the color to black ensures that the data in the buffer should
+     * only be the character and no color information. 
+     */
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'a');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'b');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'c');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'd');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'e');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'f');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, ' ');
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+}
+
+static void test_vga_put_character__should__wrap_to_top_at_end_of_buffer_without_newlines(void) {
+    vga_t vga;
+    int width = 5;
+    int height = 3;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'j', 'k',  'c',  '\0', '\0',
+        'd', '\0', '\0', '\0', '\0',
+        'e', 'f',  'g',  'h',  'i'
+    };
+    vga_initialize(&vga, buffer, width, height);
+
+    /* 
+     * setting the color to black ensures that the data in the buffer should
+     * only be the character and no color information. 
+     */
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'a');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'b');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'c');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'd');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'e');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'f');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'g');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'h');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'i');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'j');
+    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'k');
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
 }
 
 static void test_vga_put_string__should__put_string_at_cursor(void) {
+    vga_t vga;
+    int width = 5;
+    int height = 3;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'a',  'b',  'c',  't',  'e',
+        's',  't',  '\0', '\0', '\0',
+        '\0', '\0', '\0', '\0', '\0'
+    };
 
+    vga_initialize(&vga, buffer, width, height);
+
+    /* 
+     * setting the color to black ensures that the data in the buffer should
+     * only be the character and no color information. 
+     */
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "abc");
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "test");
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
 }
 
-static void test_vga_put_string__should__newline_should_wrap(void) {
+static void test_vga_put_string__should__wrap_newlines(void) {
+    vga_t vga;
+    int width = 5;
+    int height = 3;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'a',  'b',  'c',  '\0', '\0',
+        't',  'e',  's',  't',  '\0',
+        '\0', '\0', '\0', '\0', '\0'
+    };
 
+    vga_initialize(&vga, buffer, width, height);
+
+    /* 
+     * setting the color to black ensures that the data in the buffer should
+     * only be the character and no color information.
+     */
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "abc\n");
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "test");
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+}
+
+static void test_vga_put_string__should__wrap_to_top_at_end_of_buffer_with_newlines(void) {
+    vga_t vga;
+    int width = 5;
+    int height = 3;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        't',  'o',  'p',  '\0', '\0',
+        't',  'e',  's',  't',  '\0',
+        'm',  'i',  's',  's',  '\0'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    /* 
+     * setting the color to black ensures that the data in the buffer should
+     * only be the character and no color information.
+     */
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "abc\n");
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "test\n");
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "miss\n");
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "top\n");
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+}
+
+static void test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_newlines(void) {
+    vga_t vga;
+    int width = 5;
+    int height = 3;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        't',  'o',  'p',  '\0', '\0',
+        't',  'e',  's',  't',  '\0',
+        'm',  'i',  's',  's',  ' '
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    /* 
+     * setting the color to black ensures that the data in the buffer should
+     * only be the character and no color information.
+     */
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "abc\n");
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "test\n");
+    vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "miss top");
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
 }
 
 testfunc_container_t test_function_containers[] = {
@@ -118,10 +290,13 @@ testfunc_container_t test_function_containers[] = {
     {"test_vga_put_character__should__put_character_at_cursor", test_vga_put_character__should__put_character_at_cursor},
     {"test_vga_put_character__should__put_foreground_color_with_character", test_vga_put_character__should__put_foreground_color_with_character},
     {"test_vga_put_character__should__put_background_color_with_character", test_vga_put_character__should__put_background_color_with_character},
-
-    {"test_vga_put_character__should__newline_should_wrap", test_vga_put_character__should__newline_should_wrap},
+    {"test_vga_put_character__should__wrap_on_newlines", test_vga_put_character__should__wrap_on_newlines},
+    {"test_vga_put_character__should__wrap_to_top_at_end_of_buffer_with_newlines", test_vga_put_character__should__wrap_to_top_at_end_of_buffer_with_newlines},
+    {"test_vga_put_character__should__wrap_to_top_at_end_of_buffer_without_newlines", test_vga_put_character__should__wrap_to_top_at_end_of_buffer_without_newlines},
     {"test_vga_put_string__should__put_string_at_cursor", test_vga_put_string__should__put_string_at_cursor},
-    {"test_vga_put_string__should__newline_should_wrap", test_vga_put_string__should__newline_should_wrap}
+    {"test_vga_put_string__should__wrap_newlines", test_vga_put_string__should__wrap_newlines},
+    {"test_vga_put_string__should__wrap_to_top_at_end_of_buffer_with_newlines", test_vga_put_string__should__wrap_to_top_at_end_of_buffer_with_newlines},
+    {"test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_newlines", test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_newlines}
 };
 
 int main(void) {

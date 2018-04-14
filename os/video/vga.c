@@ -29,10 +29,10 @@ void vga_initialize(vga_t* vga, uint16_t* buffer_address, size_t width, size_t h
     }
 }
 
-void vga_put_character(vga_t* vga, vga_color_t color, char c) {
+void vga_put_character(vga_t* vga, vga_color_t color_fg, vga_color_t color_bg, char c) {
 
 }
 
-void vga_put_string(vga_t* vga, vga_color_t color, const char* str) {
+void vga_put_string(vga_t* vga, vga_color_t color_fg, vga_color_t color_bg, const char* str) {
 
 }

@@ -1,6 +1,18 @@
 #include <testsuite.h>
 #include <llanos/video/vga.h>
 
+static vga_color_t __extract_vga_color_fg(uint16_t vga_entry) {
+    return (vga_color_t)((vga_entry >> 8) & 0x0f);
+}
+
+static vga_color_t __extract_vga_color_bg(uint16_t vga_entry) {
+    return (vga_color_t)(vga_entry >> 12);
+}
+
+static char __extract_vga_char(uint16_t vga_entry) {
+    return (char)(vga_entry & 0x00ff);
+}
+
 static void test_vga_get_default_terminal_width__should__return_80(void) {
     TEST_ASSERT_EQUAL(vga_get_default_terminal_width(), 80);
 }
@@ -56,7 +68,30 @@ static void test_vga_initialize__should__set_terminal_height_to_parameter(void) 
 }
 
 static void test_vga_put_character__should__put_character_at_cursor(void) {
+    vga_t vga;
+    uint16_t buffer[10];
+    vga_initialize(&vga, buffer, 5, 2);
+    vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'a');
+    vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'b');
+    TEST_ASSERT_EQUAL(__extract_vga_char(buffer[1]), 'b');
+}
 
+static void test_vga_put_character__should__put_foreground_color_with_character(void) {
+    vga_t vga;
+    uint16_t buffer[10];
+    vga_initialize(&vga, buffer, 5, 2);
+    vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'a');
+    vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'c');
+    TEST_ASSERT_EQUAL(__extract_vga_color_fg(buffer[1]), VGA_COLOR_CYAN);
+}
+
+static void test_vga_put_character__should__put_background_color_with_character(void) {
+    vga_t vga;
+    uint16_t buffer[10];
+    vga_initialize(&vga, buffer, 5, 2);
+    vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'a');
+    vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'c');
+    TEST_ASSERT_EQUAL(__extract_vga_color_bg(buffer[1]), VGA_COLOR_RED);
 }
 
 static void test_vga_put_character__should__newline_should_wrap(void) {
@@ -81,6 +116,9 @@ testfunc_container_t test_function_containers[] = {
     {"test_vga_initialize__should__set_terminal_width_to_parameter", test_vga_initialize__should__set_terminal_width_to_parameter},
     {"test_vga_initialize__should__set_terminal_height_to_parameter", test_vga_initialize__should__set_terminal_height_to_parameter},
     {"test_vga_put_character__should__put_character_at_cursor", test_vga_put_character__should__put_character_at_cursor},
+    {"test_vga_put_character__should__put_foreground_color_with_character", test_vga_put_character__should__put_foreground_color_with_character},
+    {"test_vga_put_character__should__put_background_color_with_character", test_vga_put_character__should__put_background_color_with_character},
+
     {"test_vga_put_character__should__newline_should_wrap", test_vga_put_character__should__newline_should_wrap},
     {"test_vga_put_string__should__put_string_at_cursor", test_vga_put_string__should__put_string_at_cursor},
     {"test_vga_put_string__should__newline_should_wrap", test_vga_put_string__should__newline_should_wrap}

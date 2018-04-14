@@ -77,16 +77,18 @@ extern void vga_initialize(vga_t* vga, uint16_t* buffer_address, size_t width, s
  * Put a single colored character into the vga.
  *
  * @param vga vga to put the character in.
- * @param color color of the character.
+ * @param color_fg color of the character in the forground.
+ * @param color_bg color of the character in the background.
  * @param c character to put into the vga.
  */
-extern void vga_put_character(vga_t* vga, vga_color_t color, char c);
+extern void vga_put_character(vga_t* vga, vga_color_t color_fg, vga_color_t color_bg, char c);
 
 /**
  * Put a string into the vga.
  *
  * @param vga vga to put the string in.
- * @param color color of the string.
+ * @param color_fg color of the character in the forground.
+ * @param color_bg color of the character in the background.
  * @param str string to into the vga.
  */
-extern void vga_put_string(vga_t* vga, vga_color_t color, const char* str);
+extern void vga_put_string(vga_t* vga, vga_color_t color_fg, vga_color_t color_bg, const char* str);

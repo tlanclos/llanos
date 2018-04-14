@@ -1,11 +1,8 @@
-SUBDIRS := management
-SUBDIRS += video
-
 SOURCES := $(wildcard *.c)
 
-CFLAGS := -I../include
+CFLAGS := -I../../include
 CFLAGS += -ffreestanding
 CFLAGS += -nostdlib
 CFLAGS += -g
 
-include Makefile.in
+include ../Makefile.in

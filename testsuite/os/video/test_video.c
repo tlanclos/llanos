@@ -13,6 +13,12 @@ static char __extract_vga_char(uint16_t vga_entry) {
     return (char)(vga_entry & 0x00ff);
 }
 
+static void vga_put_many_characters(vga_t* vga, char[] input, uint32_t input_size) {
+    for (uint32_t i = 0; i < input_size; i++) {
+        vga_put_character(vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, input[i]);
+    }
+}
+
 static void test_vga_get_default_terminal_width__should__return_80(void) {
     TEST_ASSERT_EQUAL(vga_get_default_terminal_width(), 80);
 }
@@ -111,12 +117,7 @@ static void test_vga_put_character__should__wrap_on_newlines(void) {
      * setting the color to black ensures that the data in the buffer should
      * only be the character and no color information. 
      */
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'a');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'b');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'c');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
+    vga_put_many_characters(&vga, {'a', '\n', 'b', '\n', 'c', '\n'}, 6);
     TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
 }
 
@@ -137,16 +138,7 @@ static void test_vga_put_character__should__wrap_to_top_at_end_of_buffer_with_ne
      * setting the color to black ensures that the data in the buffer should
      * only be the character and no color information. 
      */
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'a');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'b');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'c');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'd');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'e');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, '\n');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'f');
-    vga_put_character(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, ' ');
+    vga_put_many_characters(&vga, {'a', 'b', 'c', '\n', 'd', '\n', 'e', '\n', 'f', ' '}, 10);
     TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
 }
 

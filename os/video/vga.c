@@ -9,7 +9,7 @@ size_t vga_get_default_terminal_height(void) {
 }
 
 uint16_t* vga_get_default_buffer_address(void) {
-    return 0xb8000;
+    return (uint16_t*)0xb8000;
 }
 
 void vga_initialize(vga_t* vga, uint16_t* buffer_address, size_t width, size_t height) {

@@ -6,3 +6,5 @@
 *.o
 bin/
 */bin/*
+.isobuild
+*.iso

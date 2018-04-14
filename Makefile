@@ -9,12 +9,21 @@ LDFLAGS := -Tarch/$(ARCH)/linker.ld
 SUBDIRS := arch/$(ARCH)
 SUBDIRS += os
 
-LINKER = arch/$(ARCH)/linker.ld
-TARGET = vm-llanos
+LINKER := arch/$(ARCH)/linker.ld
+TARGET := vm-llanos
+ISO := llanos.iso
 
 all: build
 
-build: $(TARGET)
+build: $(TARGET) $(ISO)
+
+$(ISO): $(TARGET) boot/grub.cfg
+	@echo "	ISO	$@"
+	@install -dv .isobuild/boot/grub
+	@install -v $(TARGET) .isobuild/boot/.
+	@install -v boot/grub.cfg .isobuild/boot/grub/.
+	@grub-mkrescue -o $(ISO) .isobuild
+	@rm -rf .isobuild
 
 $(TARGET): $(SUBDIRS)
 	@echo "	LD	$@"
@@ -28,5 +37,6 @@ $(SUBDIRS:%=clean-%):%: FORCE
 
 clean: $(SUBDIRS:%=clean-%)
 	@-rm -f $(TARGET)
+	@-rm -f $(ISO)
 
 FORCE:

@@ -151,6 +151,7 @@ int function_name_with_many_params(
 
     return a + b;
 }
+```
 
 ## Scope
 
@@ -198,6 +199,7 @@ int function(int a) {
 
     return a;
 }
+```
 
 ## Static Variables
 

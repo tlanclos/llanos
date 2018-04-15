@@ -22,15 +22,15 @@ static void __put_many_characters(vga_t* vga, char* chars, size_t length) {
 }
 
 static void test_vga_get_default_terminal_width__should__return_80(void) {
-    TEST_ASSERT_EQUAL(vga_get_default_terminal_width(), 80);
+    TEST_ASSERT_EQUAL(80, vga_get_default_terminal_width());
 }
 
 static void test_vga_get_default_terminal_height__should__return_25(void) {
-    TEST_ASSERT_EQUAL(vga_get_default_terminal_height(), 25);
+    TEST_ASSERT_EQUAL(25, vga_get_default_terminal_height());
 }
 
 static void test_vga_get_default_buffer_address__should__return_0xB8000(void) {
-    TEST_ASSERT_EQUAL_PTR(vga_get_default_buffer_address(), (uint16_t*)0xB8000);
+    TEST_ASSERT_EQUAL_PTR((uint16_t*)0xB8000, vga_get_default_buffer_address());
 }
 
 static void test_vga_initialize__should__clear_buffer(void) {
@@ -53,26 +53,26 @@ static void test_vga_initialize__should__reset_cursor_row(void) {
     vga_t vga;
     vga.cursor_row = 10;
     vga_initialize(&vga, NULL, 0, 0);
-    TEST_ASSERT_EQUAL(vga.cursor_row, 0);
+    TEST_ASSERT_EQUAL(0, vga.cursor_row);
 }
 
 static void test_vga_initialize__should__reset_cursor_col(void) {
     vga_t vga;
     vga.cursor_col = 10;
     vga_initialize(&vga, NULL, 0, 0);
-    TEST_ASSERT_EQUAL(vga.cursor_col, 0);
+    TEST_ASSERT_EQUAL(0, vga.cursor_col);
 }
 
 static void test_vga_initialize__should__set_terminal_width_to_parameter(void) {
     vga_t vga;
     vga_initialize(&vga, NULL, 123, 0);
-    TEST_ASSERT_EQUAL(vga.terminal_width, 123);
+    TEST_ASSERT_EQUAL(123, vga.terminal_width);
 }
 
 static void test_vga_initialize__should__set_terminal_height_to_parameter(void) {
     vga_t vga;
     vga_initialize(&vga, NULL, 0, 123);
-    TEST_ASSERT_EQUAL(vga.terminal_height, 123);
+    TEST_ASSERT_EQUAL(123, vga.terminal_height);
 }
 
 static void test_vga_put_character__should__put_character_at_cursor(void) {
@@ -81,7 +81,7 @@ static void test_vga_put_character__should__put_character_at_cursor(void) {
     vga_initialize(&vga, buffer, 5, 2);
     vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'a');
     vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'b');
-    TEST_ASSERT_EQUAL(__extract_vga_char(buffer[1]), 'b');
+    TEST_ASSERT_EQUAL('b', __extract_vga_char(buffer[1]));
 }
 
 static void test_vga_put_character__should__put_foreground_color_with_character(void) {
@@ -90,7 +90,7 @@ static void test_vga_put_character__should__put_foreground_color_with_character(
     vga_initialize(&vga, buffer, 5, 2);
     vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'a');
     vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'c');
-    TEST_ASSERT_EQUAL(__extract_vga_color_fg(buffer[1]), VGA_COLOR_CYAN);
+    TEST_ASSERT_EQUAL(VGA_COLOR_CYAN, __extract_vga_color_fg(buffer[1]));
 }
 
 static void test_vga_put_character__should__put_background_color_with_character(void) {
@@ -99,7 +99,7 @@ static void test_vga_put_character__should__put_background_color_with_character(
     vga_initialize(&vga, buffer, 5, 2);
     vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'a');
     vga_put_character(&vga, VGA_COLOR_CYAN, VGA_COLOR_RED, 'c');
-    TEST_ASSERT_EQUAL(__extract_vga_color_bg(buffer[1]), VGA_COLOR_RED);
+    TEST_ASSERT_EQUAL(VGA_COLOR_RED, __extract_vga_color_bg(buffer[1]));
 }
 
 static void test_vga_put_character__should__wrap_on_newlines(void) {

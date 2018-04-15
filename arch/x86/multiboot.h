@@ -257,3 +257,5 @@ struct multiboot_apm_info_s {
     uint16_t cseg_16_length;
     uint16_t dseg_length;
 };
+
+extern multiboot_info_t* multiboot_info;

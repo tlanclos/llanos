@@ -4,9 +4,14 @@ export CROSS_COMPILE
 ASM_SOURCES := $(wildcard *.S)
 C_SOURCES := $(wildcard *.c)
 
+CFLAGS += -I../../include
+CFLAGS += -ffreestanding
+CFLAGS += -nostdlib
+CFLAGS += -g
+
 all: build
 
-build: $(OBJECTS)
+build: $(ASM_SOURCES:.S=.o) $(C_SOURCES:.c=.o)
 
 $(ASM_SOURCES:.S=.o):%.o: %.S
 	@echo "	ASM	$@"
@@ -14,7 +19,7 @@ $(ASM_SOURCES:.S=.o):%.o: %.S
 
 $(C_SOURCES:.c=.o):%.o: %.c
 	@echo "	CC	$@"
-	@$(CROSS_COMPILE)gcc -o $@ -c $<
+	@$(CROSS_COMPILE)gcc -c -o $@ $(CFLAGS) $<
 
 clean: FORCE
 	@-rm -f *.o

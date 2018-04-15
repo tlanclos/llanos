@@ -18,10 +18,16 @@ __stack_bottom:
 __stack_top:
 
 
+.section .data
+.global multiboot_info
+multiboot_info:
+.long 0
+
 .section .text
 .global _start
 _start:
     lea %esp, __stack_top
+    mov [multiboot_info], %ebx
     call kmain
     cli
 _halt:

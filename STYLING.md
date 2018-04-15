@@ -15,7 +15,7 @@ You should also keep function and variable names concise if at all possible, but
 
 ## Unions
 
-Please do not use Unions unless it is absolutely necessary.
+Please do not use Unions unless it is absolutely necessary as defined by other subsystems or for hardware memory mapping usages.
 
 ## Structures and Enumerations Naming and Spaces
 

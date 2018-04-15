@@ -17,7 +17,6 @@ __stack_bottom:
 .skip 16384
 __stack_top:
 
-
 .section .data
 .global multiboot_info
 multiboot_info:

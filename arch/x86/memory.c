@@ -26,7 +26,7 @@ static u32 get_kernel_size(void) {
 
 
 void get_memory_table(memory_table_t* memory_table) {
-    int entry_index;
+    size_t entry_index;
     multiboot_memory_map_t* memory_map = (multiboot_memory_map_t*)multiboot_info->mmap_address;
     memory_table_entry_t* entry;
 
@@ -38,15 +38,15 @@ void get_memory_table(memory_table_t* memory_table) {
         entry->length = 0;
     }
 
-    while (memory_map < multiboot_info->mmap_address + multiboot_info->mmap_length) {
+    while ((u32)memory_map < multiboot_info->mmap_address + multiboot_info->mmap_length) {
         entry = &memory_table->entries[memory_table->length];
 
         if (memory_map->type == MULTIBOOT_MEMORY_AVAILABLE) {
-            entry->base = memory_map->address;
+            entry->base = (u64*)memory_map->address;
             entry->length = memory_map->length;
             memory_table->length++;
         }
 
-        memory_map = (multiboot_memory_map_t*)((uint32_t)memory_map + memory_map->size + sizeof(memory_map->size));
+        memory_map = (multiboot_memory_map_t*)((u32)memory_map + memory_map->size + sizeof(memory_map->size));
     }
 }

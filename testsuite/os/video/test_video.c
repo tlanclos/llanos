@@ -265,19 +265,24 @@ static void test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_ne
 
 testfunc_container_t test_function_containers[] = {
     {"test_vga_get_default_terminal_width__should__return_80", test_vga_get_default_terminal_width__should__return_80},
+    
     {"test_vga_get_default_terminal_height__should__return_25", test_vga_get_default_terminal_height__should__return_25},
+    
     {"test_vga_get_default_buffer_address__should__return_0xB8000", test_vga_get_default_buffer_address__should__return_0xB8000},
+    
     {"test_vga_initialize__should__clear_buffer", test_vga_initialize__should__clear_buffer},
     {"test_vga_initialize__should__reset_cursor_row", test_vga_initialize__should__reset_cursor_row},
     {"test_vga_initialize__should__reset_cursor_col", test_vga_initialize__should__reset_cursor_col},
     {"test_vga_initialize__should__set_terminal_width_to_parameter", test_vga_initialize__should__set_terminal_width_to_parameter},
     {"test_vga_initialize__should__set_terminal_height_to_parameter", test_vga_initialize__should__set_terminal_height_to_parameter},
+    
     {"test_vga_put_character__should__put_character_at_cursor", test_vga_put_character__should__put_character_at_cursor},
     {"test_vga_put_character__should__put_foreground_color_with_character", test_vga_put_character__should__put_foreground_color_with_character},
     {"test_vga_put_character__should__put_background_color_with_character", test_vga_put_character__should__put_background_color_with_character},
     {"test_vga_put_character__should__wrap_on_newlines", test_vga_put_character__should__wrap_on_newlines},
     {"test_vga_put_character__should__wrap_to_top_at_end_of_buffer_with_newlines", test_vga_put_character__should__wrap_to_top_at_end_of_buffer_with_newlines},
     {"test_vga_put_character__should__wrap_to_top_at_end_of_buffer_without_newlines", test_vga_put_character__should__wrap_to_top_at_end_of_buffer_without_newlines},
+    
     {"test_vga_put_string__should__put_string_at_cursor", test_vga_put_string__should__put_string_at_cursor},
     {"test_vga_put_string__should__wrap_newlines", test_vga_put_string__should__wrap_newlines},
     {"test_vga_put_string__should__wrap_to_top_at_end_of_buffer_with_newlines", test_vga_put_string__should__wrap_to_top_at_end_of_buffer_with_newlines},

@@ -15,6 +15,7 @@ DEPENDENCIES := $(TEST_SOURCES:%=%.d)
 CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -Werror
+CFLAGS += -std=c11
 CFLAGS += -I$(REPO_ROOT)/include
 CFLAGS += -I$(REPO_ROOT)/testsuite/include
 

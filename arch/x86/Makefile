@@ -8,6 +8,7 @@ CFLAGS += -I../../include
 CFLAGS += -ffreestanding
 CFLAGS += -nostdlib
 CFLAGS += -g
+CFLAGS += -std=c11
 
 all: build
 

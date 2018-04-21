@@ -7,6 +7,8 @@ SOURCES ?=
 OBJECTS := $(SOURCES:%.c=%.o)
 DEPENDENCIES := $(SOURCES:%=%.d)
 
+CFLAGS += -std=c11
+
 all: build
 
 build: $(SUBDIRS) $(OBJECTS)

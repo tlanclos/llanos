@@ -2,6 +2,7 @@ ENTRY(_start)
 
 SECTIONS {
     . = 1M;
+    __kernel_load_address = .;
 
     .text BLOCK(4K) : ALIGN(4K) {
         *(.multiboot)
@@ -20,4 +21,6 @@ SECTIONS {
         *(.COMMON)
         *(.bss)
     }
+
+    __kernel_end_address = .;
 }

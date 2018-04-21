@@ -13,11 +13,11 @@ all: build
 
 build: $(ASM_SOURCES:.S=.o) $(C_SOURCES:.c=.o)
 
-$(ASM_SOURCES:.S=.o):%.o: %.S
+$(ASM_SOURCES:.S=.o):%.o: %.S linker.ld
 	@echo "	ASM	$@"
 	@$(CROSS_COMPILE)as -msyntax=intel -mmnemonic=intel --32 -g -o $@ $<
 
-$(C_SOURCES:.c=.o):%.o: %.c
+$(C_SOURCES:.c=.o):%.o: %.c linker.ld
 	@echo "	CC	$@"
 	@$(CROSS_COMPILE)gcc -c -o $@ $(CFLAGS) $<
 

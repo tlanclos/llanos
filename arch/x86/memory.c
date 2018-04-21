@@ -1,7 +1,29 @@
 #include <llanos/management/memory.h>
 #include "multiboot.h"
 
+extern u32 __kernel_load_address;
+extern u32 __kernel_end_address;
+
 static memory_table_t __memory_table;
+
+/**
+ * Get the address in which the kernel was loaded.
+ *
+ * @return pointer to the address in which the kernel was loaded.
+ */
+static u32* get_kernel_load_address(void) {
+    return (u32*)&__kernel_load_address;
+}
+
+/**
+ * Get size of the kernel.
+ *
+ * @return the size of the kernel in bytes.
+ */
+static u32 get_kernel_size(void) {
+    return (u32)&__kernel_end_address - (u32)&__kernel_load_address;
+}
+
 
 void get_memory_table(memory_table_t* memory_table) {
     int entry_index;

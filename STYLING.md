@@ -123,7 +123,11 @@ Notice the use of `extern` on declarations. This is present implicitely by the c
 
 ## Usage of Built-in Types
 
-Although the usage of builtin types can be very convienent, it is looked down upon in the OS world. The `stdint.h`, `stdbool.h`, and `stddef.h` files include a bunch of nice explicit types that should be preferred over builtin types. For example, use `uint32_t` instead of `unsigned` or `unsigned int`. Use `int64_t` instead of `long`. Use `int16_t` instead of `short`. And please use `bool` from `stdbool.h` instead of `int`.
+Although the usage of builtin types can be very convienent, it is looked down upon in the OS world. The `stdint.h`, `stdbool.h`, and `stddef.h` files include a bunch of nice explicit types that should be preferred over builtin types. 
+
+Types from these files have been consolidated and renamed into a nice `types.h` file that can be included with `#include <llanos/types.h>`. 
+
+Also, anytime a boolean value is needed, please use `bool` instead of `int`.
 
 ## Includes
 

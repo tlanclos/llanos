@@ -33,15 +33,59 @@ static void test_max_on_right_of_2_float__should__return_the_right_hand_size(voi
     TEST_ASSERT_EQUAL(MAX(2.1, 2.2), 2.2);
 }
 
+static void test_in_range__should__exclude_before_start(void) {
+    const range_t range = {
+        .start = -29,
+        .end = 100
+    };
+
+    TEST_ASSERT_FALSE(in_range(-30, &range));
+}
+
+static void test_in_range__should__include_start(void) {
+    const range_t range = {
+        .start = -30,
+        .end = 100
+    };
+    
+    TEST_ASSERT_TRUE(in_range(-30, &range));
+}
+
+static void test_in_range__should__include_before_end(void) {
+    const range_t range = {
+        .start = -30,
+        .end = 100
+    };
+    
+    TEST_ASSERT_TRUE(in_range(99, &range));
+}
+
+static void test_in_range__should__exclude_end(void) {
+    const range_t range = {
+        .start = -30,
+        .end = 100
+    };
+    
+    TEST_ASSERT_FALSE(in_range(100, &range));
+}
+
 testfunc_container_t test_function_containers[] = {
     {"test_min_on_left_of_2_integers__should__return_the_left_hand_size", test_min_on_left_of_2_integers__should__return_the_left_hand_size},
     {"test_min_on_right_of_2_integers__should__return_the_right_hand_size", test_min_on_right_of_2_integers__should__return_the_right_hand_size},
+    
     {"test_max_on_left_of_2_integers__should__return_the_left_hand_size", test_max_on_left_of_2_integers__should__return_the_left_hand_size},
     {"test_max_on_right_of_2_integers__should__return_the_right_hand_size", test_max_on_right_of_2_integers__should__return_the_right_hand_size},
+    
     {"test_min_on_left_of_2_float__should__return_the_left_hand_size", test_min_on_left_of_2_float__should__return_the_left_hand_size},
     {"test_min_on_right_of_2_float__should__return_the_right_hand_size", test_min_on_right_of_2_float__should__return_the_right_hand_size},
+    
     {"test_max_on_left_of_2_float__should__return_the_left_hand_size", test_max_on_left_of_2_float__should__return_the_left_hand_size},
-    {"test_max_on_right_of_2_float__should__return_the_right_hand_size", test_max_on_right_of_2_float__should__return_the_right_hand_size}
+    {"test_max_on_right_of_2_float__should__return_the_right_hand_size", test_max_on_right_of_2_float__should__return_the_right_hand_size},
+
+    {"test_in_range__should__exclude_before_start", test_in_range__should__exclude_before_start},
+    {"test_in_range__should__include_start", test_in_range__should__include_start},
+    {"test_in_range__should__include_before_end", test_in_range__should__include_before_end},
+    {"test_in_range__should__exclude_end", test_in_range__should__exclude_end},
 };
 
 int main(void) {

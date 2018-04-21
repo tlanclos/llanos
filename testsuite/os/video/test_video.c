@@ -1,4 +1,5 @@
 #include <testsuite.h>
+#include <llanos/types.h>
 #include <llanos/video/vga.h>
 
 static vga_color_t __extract_vga_color_fg(uint16_t vga_entry) {

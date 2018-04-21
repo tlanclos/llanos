@@ -1,7 +1,7 @@
 #include <llanos/video/vga.h>
 
-static inline uint16_t __vga_get_entry(vga_color_t color_fg, vga_color_t color_bg, char c) {
-    return (((uint16_t)(color_fg) | ((uint16_t)(color_bg) << 4)) << 8) | (uint16_t)(c);
+static inline u16 __vga_get_entry(vga_color_t color_fg, vga_color_t color_bg, char c) {
+    return (((u16)(color_fg) | ((u16)(color_bg) << 4)) << 8) | (u16)(c);
 }
 
 static void __vga_advance_cursor_by_1(vga_t* vga) {
@@ -28,11 +28,11 @@ size_t vga_get_default_terminal_height(void) {
     return 25;
 }
 
-uint16_t* vga_get_default_buffer_address(void) {
-    return (uint16_t*)0xb8000;
+u16* vga_get_default_buffer_address(void) {
+    return (u16*)0xb8000;
 }
 
-void vga_initialize(vga_t* vga, uint16_t* buffer_address, size_t width, size_t height) {
+void vga_initialize(vga_t* vga, u16* buffer_address, size_t width, size_t height) {
     size_t row;
     size_t col;
 

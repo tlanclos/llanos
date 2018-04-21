@@ -1,7 +1,6 @@
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
+#include <llanos/types.h>
 
 typedef enum vga_color_e vga_color_t;
 typedef struct vga_s vga_t;
@@ -26,7 +25,7 @@ enum vga_color_e {
 };
 
 struct vga_s {
-    uint16_t* buffer_address;
+    u16* buffer_address;
     size_t cursor_row;
     size_t cursor_col;
     size_t terminal_width;
@@ -58,7 +57,7 @@ extern size_t vga_get_default_terminal_height(void);
  *
  * @return The default buffer address.
  */
-extern uint16_t* vga_get_default_buffer_address(void);
+extern u16* vga_get_default_buffer_address(void);
 
 /**
  * Initialize a vga driver.
@@ -71,7 +70,7 @@ extern uint16_t* vga_get_default_buffer_address(void);
  * @param width width of the terminal.
  * @param height height of the terminal.
  */
-extern void vga_initialize(vga_t* vga, uint16_t* buffer_address, size_t width, size_t height);
+extern void vga_initialize(vga_t* vga, u16* buffer_address, size_t width, size_t height);
 
 /**
  * Put a single colored character into the vga.

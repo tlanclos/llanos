@@ -1,7 +1,6 @@
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
+#include <llanos/types.h>
 
 #define MAX_MEMORY_TABLE_ENTRIES    32
 
@@ -9,8 +8,8 @@ typedef struct memory_table_entry_s memory_table_entry_t;
 typedef struct memory_table_s memory_table_t;
 
 struct memory_table_entry_s {
-    uint64_t* base;
-    uint64_t length;
+    u64* base;
+    u64 length;
 };
 
 struct memory_table_s {

@@ -18,7 +18,7 @@ struct memory_table_s {
 };
 
 /**
- * Fetch a copy of the memory table mapping for resource allocation.
+ * @brief Fetch a copy of the memory table mapping for resource allocation.
  *
  * @param memory_table pointer to where the memory table should be stored.
  */

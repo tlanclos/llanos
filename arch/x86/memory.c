@@ -7,7 +7,7 @@ extern u32 __kernel_end_address;
 static memory_table_t __memory_table;
 
 /**
- * Get the address in which the kernel was loaded.
+ * @brief Get the address in which the kernel was loaded.
  *
  * @return pointer to the address in which the kernel was loaded.
  */
@@ -16,7 +16,7 @@ static u32* get_kernel_load_address(void) {
 }
 
 /**
- * Get size of the kernel.
+ * @brief Get size of the kernel.
  *
  * @return the size of the kernel in bytes.
  */

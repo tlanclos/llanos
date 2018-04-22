@@ -33,7 +33,7 @@ struct vga_s {
 };
 
 /**
- * Get the default terminal width for the VGA terminal.
+ * @brief Get the default terminal width for the VGA terminal.
  *
  * Default terminal width for VGA is 80.
  *
@@ -42,7 +42,7 @@ struct vga_s {
 extern size_t vga_get_default_terminal_width(void);
 
 /**
- * Get the default terminal heigh tfor the VGA terminal.
+ * @brief Get the default terminal heigh tfor the VGA terminal.
  *
  * Default terminal height for VGA is 25.
  *
@@ -51,7 +51,7 @@ extern size_t vga_get_default_terminal_width(void);
 extern size_t vga_get_default_terminal_height(void);
 
 /**
- * Get the default buffer address.
+ * @brief Get the default buffer address.
  *
  * Default buffer address for VGA is 0xB8000
  *
@@ -60,7 +60,7 @@ extern size_t vga_get_default_terminal_height(void);
 extern u16* vga_get_default_buffer_address(void);
 
 /**
- * Initialize a vga driver.
+ * @brief Initialize a vga driver.
  *
  * This should clear the buffer. And setup all values
  * in the vga to their defaults.
@@ -73,7 +73,7 @@ extern u16* vga_get_default_buffer_address(void);
 extern void vga_initialize(vga_t* vga, u16* buffer_address, size_t width, size_t height);
 
 /**
- * Put a single colored character into the vga.
+ * @brief Put a single colored character into the vga.
  *
  * @param vga vga to put the character in.
  * @param color_fg color of the character in the forground.
@@ -83,7 +83,7 @@ extern void vga_initialize(vga_t* vga, u16* buffer_address, size_t width, size_t
 extern void vga_put_character(vga_t* vga, vga_color_t color_fg, vga_color_t color_bg, char c);
 
 /**
- * Put a string into the vga.
+ * @brief Put a string into the vga.
  *
  * @param vga vga to put the string in.
  * @param color_fg color of the character in the forground.

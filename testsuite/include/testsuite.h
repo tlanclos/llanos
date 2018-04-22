@@ -17,7 +17,7 @@ struct testsuite_s {
 };
 
 /**
- * Run a testsuite of functions.
+ * @brief Run a testsuite of functions.
  *
  * @param testsuite testsuite of functions.
  */

@@ -215,17 +215,17 @@ Any function defined inside a source file that is meant to be private should be 
 
 ## Documentation
 
-Function documentation should be placed at the top of the function declaration in the header file. If there is not function declaration in the header file, then the function is private and should be documented in the source file. Documenting a function includes adding the documentation multiline comment above the function declaration. For example:
+Function documentation should be placed at the top of the function declaration in the header file. If there is not function declaration in the header file, then the function is private and should be documented in the source file. Documentation is formatted in the style of Doxygen using the Java-like documentation sytax. For example:
 
 ```
 /**
- * Function short description.
+ * @breif Short description.
  *
- * Function detailed description.
+ * Longer description.
  *
- * @param param1 parameter docs.
- * @param param2 parameter docs.
- * @return return value docs.
+ * @param p1 parameter description.
+ * @param p2 parameter description.
+ * @return return description.
  */
-int function(int param1, int param2);
+extern int function(int p1, bool p2);
 ```

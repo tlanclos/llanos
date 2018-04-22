@@ -13,7 +13,7 @@ struct range_s {
 };
 
 /**
- * Check if a  value is within a given range.
+ * @brief Check if a  value is within a given range.
  *
  * @param value value to check.
  * @param range range to check for value.

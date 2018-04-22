@@ -1,9 +1,27 @@
 #include <llanos/video/vga.h>
 
+/**
+ * @brief Get a VGA entry from a forground color, background color, and character.
+ *
+ * @param color_fg foreground color (chosen from a color in vga_color_t).
+ * @param color_bg background color (chosen from a color in vga_color_t).
+ * @param c character for the VGA entry.
+ * @return a VGA entry representing the character with foreground and background color.
+ */
 static inline u16 __vga_get_entry(vga_color_t color_fg, vga_color_t color_bg, char c) {
     return (((u16)(color_fg) | ((u16)(color_bg) << 4)) << 8) | (u16)(c);
 }
 
+/**
+ * @brief Advance the cursor on a VGA type by 1 character.
+ *
+ * This will advance the VGA cursor by 1. If the character reaches the width
+ * of the buffer, then it will move to the farthest left character of the next line.
+ * If the cursor reaches the last character on the last line, then it will advance to the 
+ * very first position (0, 0).
+ *
+ * @param vga the vga struct to advance by 1.
+ */
 static void __vga_advance_cursor_by_1(vga_t* vga) {
     /* move to the next column */
     vga->cursor_col++;

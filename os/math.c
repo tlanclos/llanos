@@ -12,7 +12,7 @@
  * @param higher represents the range with the higher starting value.
  * @return false if the ranges did not have an intersection, true if they did.
  */
-static bool __range_intersection__sorted(range_t* intersection, const range_t* lower, const range_t* higher) {
+static bool __range_intersection__sorted(range_t* intersection, range_t* lower, range_t* higher) {
     if (lower->end <= higher->start) {
         /*
          * the ranges definitely do not intersect. for example:
@@ -22,8 +22,7 @@ static bool __range_intersection__sorted(range_t* intersection, const range_t* l
         return false;
     } else {
         if (intersection != NULL) {
-            intersection->start = higher->start;
-            intersection->end = MIN(lower->end, higher->end);
+            range_init(intersection, higher->start, MIN(lower->end, higher->end));
         }
         return true;
     }
@@ -41,7 +40,7 @@ static bool __range_intersection__sorted(range_t* intersection, const range_t* l
  * @param higher represents the range with the higher starting value.
  * @return false if ther ranges were not joinable, true if they were.
  */
-static bool __range_join__sorted(range_t* join, const range_t* lower, const range_t* higher) {
+static bool __range_join__sorted(range_t* join, range_t* lower, range_t* higher) {
     if (lower->end < higher->start) {
         /*
          * If the last value of lower's end is lower than higher's
@@ -55,18 +54,27 @@ static bool __range_join__sorted(range_t* join, const range_t* lower, const rang
         return false;
     } else {
         if (join != NULL) {
-            join->start = lower->start;
-            join->end = MAX(lower->end, higher->end);
+            range_init(join, lower->start, MAX(lower->end, higher->end));
         }
         return true;
     }
 }
 
-bool in_range(s64 value, const range_t* range) {
+void range_init(range_t* range, s64 start, s64 end) {
+    range->start = start;
+    range->end = end;
+    range->span = end - start;
+}
+
+bool in_range(s64 value, range_t* range) {
     return value >= range->start && value < range->end;
 }
 
-bool range_intersection(range_t* intersection, const range_t* range1, const range_t* range2) {
+bool range_equal(range_t* range1, range_t* range2) {
+    return range1->start == range2->start && range1->end == range2->end;
+}
+
+bool range_intersection(range_t* intersection, range_t* range1, range_t* range2) {
     if (range1->start < range2->start) {
         return __range_intersection__sorted(intersection, range1, range2);
     } else {
@@ -74,7 +82,7 @@ bool range_intersection(range_t* intersection, const range_t* range1, const rang
     }
 }
 
-bool range_join(range_t* join, const range_t* range1, const range_t* range2) {
+bool range_join(range_t* join, range_t* range1, range_t* range2) {
     if (range1->start < range2->start) {
         return __range_join__sorted(join, range1, range2);
     } else {

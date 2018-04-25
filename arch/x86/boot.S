@@ -26,6 +26,7 @@ multiboot_info:
 .global _start
 _start:
     lea %esp, __stack_top
+    /* multiboot info gets stored in %ebx by grub */
     mov [multiboot_info], %ebx
     call kmain
     cli

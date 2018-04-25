@@ -4,7 +4,7 @@ include $(REPO_ROOT)/Defaults.in
 SUBDIRS ?=
 SOURCES ?=
 
-OBJECTS := $(SOURCES:%.c=%.o)
+OBJECTS := $(SOURCES:%.c=%.c.o)
 DEPENDENCIES := $(SOURCES:%=%.d)
 
 CFLAGS += -std=c11
@@ -20,7 +20,7 @@ $(DEPENDENCIES):%.d: %
 	@echo "	DEP	$@"
 	@$(CROSS_COMPILE)gcc $(CFLAGS) -MM $< > $@
 
-$(OBJECTS):%.o: %.c
+$(OBJECTS):%.o: %
 	@echo "	CC	$@"
 	@$(CROSS_COMPILE)gcc -c -o $@ $(CFLAGS) $<
 

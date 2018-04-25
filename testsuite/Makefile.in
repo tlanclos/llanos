@@ -7,8 +7,8 @@ TEST_DEP_SOURCES ?=
 
 TEST_DEP_SOURCES += $(wildcard $(REPO_ROOT)/testsuite/framework/*.c)
 
-TEST_OBJECTS := $(TEST_SOURCES:%.c=%.o)
-TEST_DEP_OBJECTS := $(TEST_DEP_SOURCES:%.c=%.o)
+TEST_OBJECTS := $(TEST_SOURCES:%.c=%.c.o)
+TEST_DEP_OBJECTS := $(TEST_DEP_SOURCES:%.c=%.c.o)
 
 DEPENDENCIES := $(TEST_SOURCES:%=%.d)
 
@@ -21,41 +21,41 @@ CFLAGS += -I$(REPO_ROOT)/testsuite/include
 
 all: build
 
-build: $(SUBDIRS) $(TEST_OBJECTS:%.o=%)
+build: $(SUBDIRS) $(TEST_OBJECTS:%.c.o=%)
 
 $(SUBDIRS):%: FORCE
 	@$(MAKE) -C $@ build
 
-$(TEST_DEP_OBJECTS):%.o: FORCE
+$(TEST_DEP_OBJECTS):%.c.o: FORCE
 	@$(MAKE) -C $(@D) $(@F)
 
 $(DEPENDENCIES):%.d: %
 	@echo "	DEP	$@"
 	@$(CC) $(CFLAGS) -MM $< > $@
 
-$(TEST_OBJECTS:%.o=%):%: %.o $(TEST_DEP_OBJECTS)
+$(TEST_OBJECTS:%.c.o=%):%: %.c.o $(TEST_DEP_OBJECTS)
 	@echo "	LD	$@"
 	@$(CC) -o $@ $(CFLAGS) $^ -lgcc
 
-$(TEST_OBJECTS):%.o: %.c
+$(TEST_OBJECTS):%.o: %
 	@echo "	CC	$@"
 	@$(CC) -c -o $@ $(CFLAGS) $<
 
 $(SUBDIRS:%=run-%):%: FORCE
 	@$(MAKE) -C `echo $@ | cut -d- -f2-` run
 
-$(TEST_OBJECTS:%.o=run-%): $(TEST_OBJECTS:%.o=%)
+$(TEST_OBJECTS:%.c.o=run-%): $(TEST_OBJECTS:%.c.o=%)
 	@echo "	TST	`echo $@ | cut -d- -f2-`"
 	@./`echo $@ | cut -d- -f2-`
 
-run: $(SUBDIRS:%=run-%) $(TEST_OBJECTS:%.o=run-%)
+run: $(SUBDIRS:%=run-%) $(TEST_OBJECTS:%.c.o=run-%)
 
 $(SUBDIRS:%=clean-%):%: FORCE
 	@$(MAKE) -C `echo $@ | cut -d- -f2-` clean
 
 clean: $(SUBDIRS:%=clean-%)
 	@-rm -f $(TEST_OBJECTS)
-	@-rm -f $(TEST_OBJECTS:%.o=%)
+	@-rm -f $(TEST_OBJECTS:%.c.o=%)
 	@-rm -f $(DEPENDENCIES)
 	@-rm -f $(TEST_DEP_OBJECTS)
 

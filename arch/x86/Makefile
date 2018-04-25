@@ -12,13 +12,13 @@ CFLAGS += -std=c11
 
 all: build
 
-build: $(ASM_SOURCES:.S=.o) $(C_SOURCES:.c=.o)
+build: $(ASM_SOURCES:.S=.S.o) $(C_SOURCES:.c=.c.o)
 
-$(ASM_SOURCES:.S=.o):%.o: %.S linker.ld
+$(ASM_SOURCES:.S=.S.o):%.S.o: %.S linker.ld
 	@echo "	ASM	$@"
 	@$(CROSS_COMPILE)as -msyntax=intel -mmnemonic=intel --32 -g -o $@ $<
 
-$(C_SOURCES:.c=.o):%.o: %.c linker.ld
+$(C_SOURCES:.c=.c.o):%.c.o: %.c linker.ld
 	@echo "	CC	$@"
 	@$(CROSS_COMPILE)gcc -c -o $@ $(CFLAGS) $<
 

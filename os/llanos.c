@@ -19,6 +19,7 @@ int kmain(void) {
     vga_t vga;
     int i;
     int j;
+    uint32_t memindex;
 
     get_memory_table(&memory);
 
@@ -30,6 +31,16 @@ int kmain(void) {
     );
 
     for (i = 0; i < memory.length; i++) {
+        for (memindex = 0; memindex < memory.entries[i].length; memindex++) {
+            *((u8*)memory.entries[i].base + memindex) = 0;
+            for (j = 7; j >= 0; j--) {
+                vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, to_hex(((uint32_t)(memory.entries[i].base + memindex) & (0xf << (j * 4))) >> (j * 4)));
+            }
+            vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, '\n');
+        }
+    }
+
+    for (i = 0; i < memory.length; i++) {
         for (j = 7; j >= 0; j--) {
             vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, to_hex(((uint32_t)memory.entries[i].base & (0xf << (j * 4))) >> (j * 4)));
         }
@@ -39,5 +50,6 @@ int kmain(void) {
         }
         vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, '\n');
     }
+
     return 0;
 }

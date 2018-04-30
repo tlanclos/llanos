@@ -5,8 +5,6 @@
 extern u32 __kernel_load_address;
 extern u32 __kernel_end_address;
 
-static memory_table_t __memory_table;
-
 /**
  * @brief Get the address in which the kernel was loaded.
  *

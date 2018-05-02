@@ -1,19 +1,23 @@
 #include <llanos/types.h>
 #include <llanos/management/interrupts.h>
 
-/* start and end interrupts are inclusive */
-#define PIC1_START_INTERRUPT    0x20
-#define PIC1_END_INTERTUPT      0x27
+#include "pic8259.h"
 
-/* start and end interrupts are inclusive */
-#define PIC2_START_INTERRUPT    0x28
-#define PIC2_END_INTERRUPT      (PIC2_START_INTERRUPT + 7)
+/* PIC start and end addresses [start, end) */
+#define PIC1_START_ADDRESS      32
+#define PIC1_END_ADDRESS        (PIC1_START_ADDRESS + 8)
+#define PIC2_START_ADDRESS      (PIC1_START_ADDRESS + 8)
+#define PIC2_END_ADDRESS        (PIC2_START_ADDRESS + 8)
 
 /* command and data ports */
 #define PIC1_COMMAND_PORT   0x20
 #define PIC1_DATA_PORT      (PIC1_COMMAND_PORT + 1)
 #define PIC2_COMMAND_PORT   0xa0
 #define PIC2_DATA_PORT      (PIC2_COMMAND_PORT + 1)
+
+
+
+
 
 /* reset PIC command for command port */
 #define PIC_RESET	0x11
@@ -22,40 +26,20 @@
 #define PIC_ACK     0x20
 
 
-/* ICW4 (not) needed */
-#define ICW1_ICW4       0x01
-
-/* Single (cascade) mode */
-#define ICW1_SINGLE     0x02
-
-/* Call address interval 4 (8) */
-#define ICW1_INTERVAL4  0x04
-
-/* Level triggered (edge) mode */
-#define ICW1_LEVEL      0x08
-
-/* Initialization - required! */
-#define ICW1_INIT       0x10
 
 
- 
-/* 8086/88 (MCS-80/85) mode */
-#define ICW4_8086       0x01
 
-/* Auto (normal) EOI */
-#define ICW4_AUTO       0x02
+/*
+ * Interrupt descriptor table for storing pointers to current interrupts.
+ */
+static u64 __interrupt_descriptor_table[32] __attribute__((section(".interrupts")));
 
-/* Buffered mode/slave */
-#define ICW4_BUF_SLAVE  0x08
+/*
+ * PIC controllers on the standard x86 system.
+ */
+static pic8259_t __pic1;
+static pic8259_t __pic2;
 
-/* Buffered mode/master */
-#define ICW4_BUF_MASTER 0x0C
-
-/* Special fully nested (not) */
-#define ICW4_SFNM       0x10
-
-
-extern void __output_byte(u16 port, u8 data);
 
 static void __pic_acknowledge(u32 interrupt_number) {
     if (interrupt_number >= PIC1_START_INTERRUPT && interrupt_number <= PIC2_END_INTERRUPT) {
@@ -67,28 +51,37 @@ static void __pic_acknowledge(u32 interrupt_number) {
     }
 }
 
-static void __interrupt_init(void) {
-    /* reset both PIC controllers */
-    __output_byte(PIC1_COMMAND_PORT, PIC_RESET);
-    __output_byte(PIC2_COMMAND_PORT, PIC_RESET);
+static void __pic_init(void) {
+    pic8259_init(&__pic1, PIC1_COMMAND_PORT, PIC1_DATA_PORT);
+    pic8259_init(&__pic2, PIC2_COMMAND_PORT, PIC2_DATA_PORT);
 
-    /* remap PIC1 to start at 32 */
-    __output_byte(PIC1_DATA_PORT, 32);
+    /* setup PIC controllers ICW1 (start initialization) */
+    pic8259_send_icw1(&__pic1, true, false, false, true);
+    pic8259_send_icw1(&__pic2, true, false, false, true);
 
-    /* remap PIC2 to start at 40 */
-    __output_byte(PIC2_DATA_PORT, 40);
+    /* setup PIC controllers ICW2 (starting addresses) */
+    pic8259_send_icw2(&__pic1, PIC1_START_ADDRESS);
+    pic8259_send_icw2(&__pic2, PIC2_START_ADDRESS);
 
-    __output_byte(PIC1_DATA_PORT, ICW1_INTERVAL4);
-    __output_byte(PIC2_DATA_PORT, ICW1_SINGLE);
+    /* 
+     * setup PIC controllers ICW3 (because we are setting up cascased mode) 
+     * there is a PIC alive at IR2, so setup cascading in that way.
+     */
+    pic8259_send_master_icw3(&__pic1, (1 << 2));
+    pic8259_send_slave_icw3(&__pic2, 2);
 
-    __output_byte(PIC1_DATA_PORT, ICW4_8086);
-    __output_byte(PIC2_DATA_PORT, ICW4_8086);
+    /* setup PIC controllers ICW4 (because we said we need to) */
+    pic8259_send_icw4(&__pic1, true, PIC8259_BUFFERED_MODE_NONE, true);
+    pic8259_send_icw4(&__pic2, true, PIC8259_BUFFERED_MODE_NONE, true);
 }
 
 
 extern void load_interrupt_table(const interrupt_table_t* interrupt_table) {
 	int i;
 	interrupt_table_entry_t* entry;
+
+    __pic_init();
+    __setup_base_interrupts();
 
 	for (i = 0; i < interrupt_table->length; i++) {
 		entry = &interrupt_table->entries[i];

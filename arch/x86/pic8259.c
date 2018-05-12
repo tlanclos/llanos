@@ -1,6 +1,8 @@
 #include <llanos/types.h>
 
-extern void __output_byte(u16 port, u8 data)
+#include "pic8259.h"
+
+extern void __output_byte(u16 port, u8 data);
 
 static void pic8259_send_command(pic8259_t* pic, u8 command) {
     __output_byte(pic->command_port, command);
@@ -19,7 +21,7 @@ static u8 pic8259_get_buffered_mode_byte(pic8259_buffered_mode_t mode) {
         return 3;
     } else {
         /* todo: should abort kernel here */
-        return 0
+        return 0;
     }
 }
 

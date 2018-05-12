@@ -2,54 +2,28 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <llanos/management/memory.h>
+#include <llanos/management/interrupt.h>
 #include <llanos/video/vga.h>
 
-char to_hex(char b) {
-    if (b >= 0 && b <= 9) {
-        return b + '0';
-    } else if (b >= 10 && b <= 15) {
-        return b = 'a';
-    } else {
-        return '\0';
-    }
-}
 
 int kmain(void) {
     memory_table_t memory;
     vga_t vga;
-    int i;
-    int j;
-    uint32_t memindex;
-
-    get_memory_table(&memory);
+    int a;
 
     vga_initialize(
-        &vga, 
+        &vga,
         vga_get_default_buffer_address(),
-        vga_get_default_terminal_width(), 
+        vga_get_default_terminal_width(),
         vga_get_default_terminal_height()
     );
+    get_memory_table(&memory);
 
-    for (i = 0; i < memory.length; i++) {
-        for (memindex = 0; memindex < memory.entries[i].length; memindex++) {
-            *((u8*)memory.entries[i].base + memindex) = 0;
-            for (j = 7; j >= 0; j--) {
-                vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, to_hex(((uint32_t)(memory.entries[i].base + memindex) & (0xf << (j * 4))) >> (j * 4)));
-            }
-            vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, '\n');
-        }
-    }
+    load_interrupt_table(NULL);
 
-    for (i = 0; i < memory.length; i++) {
-        for (j = 7; j >= 0; j--) {
-            vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, to_hex(((uint32_t)memory.entries[i].base & (0xf << (j * 4))) >> (j * 4)));
-        }
-        vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, ' ');
-        for (j = 7; j >= 0; j--) {
-            vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, to_hex(((uint32_t)memory.entries[i].length & (0xf << (j * 4))) >> (j * 4)));
-        }
-        vga_put_character(&vga, VGA_COLOR_BLUE, VGA_COLOR_BLACK, '\n');
-    }
+    a=1/0;
+
+    while (1);
 
     return 0;
 }

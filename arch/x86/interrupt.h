@@ -1,258 +1,92 @@
 #pragma once
 
-extern void __isr_handler_0(void);
-extern void __isr_handler_1(void);
-extern void __isr_handler_2(void);
-extern void __isr_handler_3(void);
-extern void __isr_handler_4(void);
-extern void __isr_handler_5(void);
-extern void __isr_handler_6(void);
-extern void __isr_handler_7(void);
-extern void __isr_handler_8(void);
-extern void __isr_handler_9(void);
-extern void __isr_handler_10(void);
-extern void __isr_handler_11(void);
-extern void __isr_handler_12(void);
-extern void __isr_handler_13(void);
-extern void __isr_handler_14(void);
-extern void __isr_handler_15(void);
-extern void __isr_handler_16(void);
-extern void __isr_handler_17(void);
-extern void __isr_handler_18(void);
-extern void __isr_handler_19(void);
-extern void __isr_handler_20(void);
-extern void __isr_handler_21(void);
-extern void __isr_handler_22(void);
-extern void __isr_handler_23(void);
-extern void __isr_handler_24(void);
-extern void __isr_handler_25(void);
-extern void __isr_handler_26(void);
-extern void __isr_handler_27(void);
-extern void __isr_handler_28(void);
-extern void __isr_handler_29(void);
-extern void __isr_handler_30(void);
-extern void __isr_handler_31(void);
-extern void __isr_handler_32(void);
-extern void __isr_handler_33(void);
-extern void __isr_handler_34(void);
-extern void __isr_handler_35(void);
-extern void __isr_handler_36(void);
-extern void __isr_handler_37(void);
-extern void __isr_handler_38(void);
-extern void __isr_handler_39(void);
-extern void __isr_handler_40(void);
-extern void __isr_handler_41(void);
-extern void __isr_handler_42(void);
-extern void __isr_handler_43(void);
-extern void __isr_handler_44(void);
-extern void __isr_handler_45(void);
-extern void __isr_handler_46(void);
-extern void __isr_handler_47(void);
-extern void __isr_handler_48(void);
-extern void __isr_handler_49(void);
-extern void __isr_handler_50(void);
-extern void __isr_handler_51(void);
-extern void __isr_handler_52(void);
-extern void __isr_handler_53(void);
-extern void __isr_handler_54(void);
-extern void __isr_handler_55(void);
-extern void __isr_handler_56(void);
-extern void __isr_handler_57(void);
-extern void __isr_handler_58(void);
-extern void __isr_handler_59(void);
-extern void __isr_handler_60(void);
-extern void __isr_handler_61(void);
-extern void __isr_handler_62(void);
-extern void __isr_handler_63(void);
-extern void __isr_handler_64(void);
-extern void __isr_handler_65(void);
-extern void __isr_handler_66(void);
-extern void __isr_handler_67(void);
-extern void __isr_handler_68(void);
-extern void __isr_handler_69(void);
-extern void __isr_handler_70(void);
-extern void __isr_handler_71(void);
-extern void __isr_handler_72(void);
-extern void __isr_handler_73(void);
-extern void __isr_handler_74(void);
-extern void __isr_handler_75(void);
-extern void __isr_handler_76(void);
-extern void __isr_handler_77(void);
-extern void __isr_handler_78(void);
-extern void __isr_handler_79(void);
-extern void __isr_handler_80(void);
-extern void __isr_handler_81(void);
-extern void __isr_handler_82(void);
-extern void __isr_handler_83(void);
-extern void __isr_handler_84(void);
-extern void __isr_handler_85(void);
-extern void __isr_handler_86(void);
-extern void __isr_handler_87(void);
-extern void __isr_handler_88(void);
-extern void __isr_handler_89(void);
-extern void __isr_handler_90(void);
-extern void __isr_handler_91(void);
-extern void __isr_handler_92(void);
-extern void __isr_handler_93(void);
-extern void __isr_handler_94(void);
-extern void __isr_handler_95(void);
-extern void __isr_handler_96(void);
-extern void __isr_handler_97(void);
-extern void __isr_handler_98(void);
-extern void __isr_handler_99(void);
-extern void __isr_handler_100(void);
-extern void __isr_handler_101(void);
-extern void __isr_handler_102(void);
-extern void __isr_handler_103(void);
-extern void __isr_handler_104(void);
-extern void __isr_handler_105(void);
-extern void __isr_handler_106(void);
-extern void __isr_handler_107(void);
-extern void __isr_handler_108(void);
-extern void __isr_handler_109(void);
-extern void __isr_handler_110(void);
-extern void __isr_handler_111(void);
-extern void __isr_handler_112(void);
-extern void __isr_handler_113(void);
-extern void __isr_handler_114(void);
-extern void __isr_handler_115(void);
-extern void __isr_handler_116(void);
-extern void __isr_handler_117(void);
-extern void __isr_handler_118(void);
-extern void __isr_handler_119(void);
-extern void __isr_handler_120(void);
-extern void __isr_handler_121(void);
-extern void __isr_handler_122(void);
-extern void __isr_handler_123(void);
-extern void __isr_handler_124(void);
-extern void __isr_handler_125(void);
-extern void __isr_handler_126(void);
-extern void __isr_handler_127(void);
-extern void __isr_handler_128(void);
-extern void __isr_handler_129(void);
-extern void __isr_handler_130(void);
-extern void __isr_handler_131(void);
-extern void __isr_handler_132(void);
-extern void __isr_handler_133(void);
-extern void __isr_handler_134(void);
-extern void __isr_handler_135(void);
-extern void __isr_handler_136(void);
-extern void __isr_handler_137(void);
-extern void __isr_handler_138(void);
-extern void __isr_handler_139(void);
-extern void __isr_handler_140(void);
-extern void __isr_handler_141(void);
-extern void __isr_handler_142(void);
-extern void __isr_handler_143(void);
-extern void __isr_handler_144(void);
-extern void __isr_handler_145(void);
-extern void __isr_handler_146(void);
-extern void __isr_handler_147(void);
-extern void __isr_handler_148(void);
-extern void __isr_handler_149(void);
-extern void __isr_handler_150(void);
-extern void __isr_handler_151(void);
-extern void __isr_handler_152(void);
-extern void __isr_handler_153(void);
-extern void __isr_handler_154(void);
-extern void __isr_handler_155(void);
-extern void __isr_handler_156(void);
-extern void __isr_handler_157(void);
-extern void __isr_handler_158(void);
-extern void __isr_handler_159(void);
-extern void __isr_handler_160(void);
-extern void __isr_handler_161(void);
-extern void __isr_handler_162(void);
-extern void __isr_handler_163(void);
-extern void __isr_handler_164(void);
-extern void __isr_handler_165(void);
-extern void __isr_handler_166(void);
-extern void __isr_handler_167(void);
-extern void __isr_handler_168(void);
-extern void __isr_handler_169(void);
-extern void __isr_handler_170(void);
-extern void __isr_handler_171(void);
-extern void __isr_handler_172(void);
-extern void __isr_handler_173(void);
-extern void __isr_handler_174(void);
-extern void __isr_handler_175(void);
-extern void __isr_handler_176(void);
-extern void __isr_handler_177(void);
-extern void __isr_handler_178(void);
-extern void __isr_handler_179(void);
-extern void __isr_handler_180(void);
-extern void __isr_handler_181(void);
-extern void __isr_handler_182(void);
-extern void __isr_handler_183(void);
-extern void __isr_handler_184(void);
-extern void __isr_handler_185(void);
-extern void __isr_handler_186(void);
-extern void __isr_handler_187(void);
-extern void __isr_handler_188(void);
-extern void __isr_handler_189(void);
-extern void __isr_handler_190(void);
-extern void __isr_handler_191(void);
-extern void __isr_handler_192(void);
-extern void __isr_handler_193(void);
-extern void __isr_handler_194(void);
-extern void __isr_handler_195(void);
-extern void __isr_handler_196(void);
-extern void __isr_handler_197(void);
-extern void __isr_handler_198(void);
-extern void __isr_handler_199(void);
-extern void __isr_handler_200(void);
-extern void __isr_handler_201(void);
-extern void __isr_handler_202(void);
-extern void __isr_handler_203(void);
-extern void __isr_handler_204(void);
-extern void __isr_handler_205(void);
-extern void __isr_handler_206(void);
-extern void __isr_handler_207(void);
-extern void __isr_handler_208(void);
-extern void __isr_handler_209(void);
-extern void __isr_handler_210(void);
-extern void __isr_handler_211(void);
-extern void __isr_handler_212(void);
-extern void __isr_handler_213(void);
-extern void __isr_handler_214(void);
-extern void __isr_handler_215(void);
-extern void __isr_handler_216(void);
-extern void __isr_handler_217(void);
-extern void __isr_handler_218(void);
-extern void __isr_handler_219(void);
-extern void __isr_handler_220(void);
-extern void __isr_handler_221(void);
-extern void __isr_handler_222(void);
-extern void __isr_handler_223(void);
-extern void __isr_handler_224(void);
-extern void __isr_handler_225(void);
-extern void __isr_handler_226(void);
-extern void __isr_handler_227(void);
-extern void __isr_handler_228(void);
-extern void __isr_handler_229(void);
-extern void __isr_handler_230(void);
-extern void __isr_handler_231(void);
-extern void __isr_handler_232(void);
-extern void __isr_handler_233(void);
-extern void __isr_handler_234(void);
-extern void __isr_handler_235(void);
-extern void __isr_handler_236(void);
-extern void __isr_handler_237(void);
-extern void __isr_handler_238(void);
-extern void __isr_handler_239(void);
-extern void __isr_handler_240(void);
-extern void __isr_handler_241(void);
-extern void __isr_handler_242(void);
-extern void __isr_handler_243(void);
-extern void __isr_handler_244(void);
-extern void __isr_handler_245(void);
-extern void __isr_handler_246(void);
-extern void __isr_handler_247(void);
-extern void __isr_handler_248(void);
-extern void __isr_handler_249(void);
-extern void __isr_handler_250(void);
-extern void __isr_handler_251(void);
-extern void __isr_handler_252(void);
-extern void __isr_handler_253(void);
-extern void __isr_handler_254(void);
-extern void __isr_handler_255(void);
+#include <llanos/types.h>
+
+#define INTERRUPT_TYPE_INTERRUPT_GATE   (0b01110)
+#define INTERRUPT_TYPE_TRAP_GATE        (0b01111)
+#define INTERRUPT_TYPE_TASK_GATE        (0b00101)
+
+#define SEGMENT_SELECTOR_KERNEL_CODE_32BIT      (0x08)
+#define SEGMENT_SELECTOR_KERNEL_DATA_32BIT      (0x10)
+#define SEGMENT_SELECTOR_KERNEL_STACK_32BIT     (0x18)
+#define SEGMENT_SELECTOR_KERNEL_CODE_16BIT      (0x20)
+#define SEGMENT_SELECTOR_KERNEL_STACK_16BIT     (0x28)
+#define SEGMENT_SELECTOR_USER_CODE_32BIT        (0x33)
+#define SEGMENT_SELECTOR_USER_DATA_32BIT        (0x3b)
+#define SEGMENT_SELECTOR_USER_STACK_32BIT       (0x43)
+
+typedef struct idt_register_s idt_register_t;
+typedef struct idt_entry_s idt_entry_t;
+
+/**
+ * @brief Interrupt Descriptor Table Register
+ *
+ * idtr.limit (lower 2 bytes) --> | isr255 |
+ *                                   ....
+ *                                |  isr1  |
+ * idtr.base (4 bytes) ---------> |  isr0  |
+ *
+ * If the IDT has 256 entries then and the base address is 0x10000000,
+ * then limit would be (256*4)-1=1023 or 0x3ff.
+ *
+ * @member limit limit represents the upper limit of idtr.
+ * @member base base address of idtr.
+ */
+struct idt_register_s {
+    u16 limit;
+    u32 base;
+} __attribute__((packed));
+
+/**
+ * @brief Interrupt Descriptor Table Entry.
+ *
+ * @member base_low lower 16-bits of interrupt function address (unused in Task Gate Mode).
+ * @member sel segment selector of ISR chosen from SEGMENT_SELECTOR_* (Trap Gate/Interrupt Gate Mode) or 
+ *      TSS descriptor (Task Gate Mode)
+ * @member always0 Always zero, just set it to zero.
+ * @member interrupt_type choose from one of the INTERRUPT_TYPE_* values
+ * @member dpl Descriptor Priviledge Level (0 is highest priority, 3 is lowest priority).
+ * @member present Present bit 1=available 0=unavailable (whether or not kernel segment is available in RAM)
+ * @member base_high higher 16-bits of interrupt function address (unused in Task Gate Mode).
+ */
+struct idt_entry_s {
+    u16 base_low;
+    u16 sel;
+    u8 always0;
+    u8 interrupt_type: 5;
+    u8 dpl: 2
+    u8 present: 1;
+    u16 base_high;
+} __attribute__((packed));
+
+
+/**
+ * @brief Build an IDTR from a base address and a size.
+ *
+ * @param idtr Destination idtr register.
+ * @param idt IDT to load.
+ * @param count Number of entries in IDT.
+ */
+extern void build_idtr(idt_register_t* idtr, idt_entry_t* idt, size_t count);
+
+
+/**
+ * @brief Load Interrupt Descriptor Table Register.
+ *
+ * This is equivalent to the assembly instruction `lidt [idtr]`
+ *
+ * @param idtr pointer to interrupt descriptor table register to load.
+ */
+extern void load_idtr(idt_register_t* idtr);
+
+/**
+ * @brief load interrupt to IDT.
+ *
+ * @param isrnum interrupt table number.
+ * @param isr interrupt function base pointer.
+ * @param sel segment selector or TSS segment (refer to idt_entry_s.sel).
+ * @param interrupt_type interrup type (refer to idt_entry_s.interrupt_type).
+ * @param dpl descriptor priviledge level (refer to idt_entry_s.dpl).
+ * @param present whether or not kernel segment is available in RAM.
+ */
+extern void setup_interrupt(u8 isrnum, (void (*isr)(void)), u8 sel, u8 interrupt_type, u8 dpl, bool present);

@@ -16,7 +16,7 @@ build: $(ASM_SOURCES:.S=.S.o) $(C_SOURCES:.c=.c.o)
 
 $(ASM_SOURCES:.S=.S.o):%.S.o: %.S linker.ld
 	@echo "	ASM	$@"
-	@$(CROSS_COMPILE)as -msyntax=intel -mmnemonic=intel --32 -g -o $@ $<
+	@$(CROSS_COMPILE)gcc -masm=intel $(CFLAGS) -D__ASM__ -c -o $@ $<
 
 $(C_SOURCES:.c=.c.o):%.c.o: %.c linker.ld
 	@echo "	CC	$@"

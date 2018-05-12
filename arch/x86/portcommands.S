@@ -1,3 +1,5 @@
+.intel_syntax noprefix
+
 .global __output_byte
 __output_byte:
     push %eax

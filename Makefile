@@ -28,6 +28,7 @@ $(ISO): $(TARGET) boot/grub.cfg
 $(TARGET): $(SUBDIRS)
 	@echo "	LD	$@"
 	@$(CROSS_COMPILE)ld -o $@ $(CFLAGS) $(LDFLAGS) `for dir in $(SUBDIRS); do find $${dir} -name *.o; done`
+	@grub-file --is-x86-multiboot "$(TARGET)" || (echo "	MULTIBOOT CHECK FAILED!" && exit 1)
 
 $(SUBDIRS):%: FORCE
 	@$(MAKE) -C $@ build

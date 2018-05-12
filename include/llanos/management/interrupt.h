@@ -5,11 +5,12 @@
 typedef struct interrupt_table_entry_s interrupt_table_entry_t;
 typedef struct interrupt_table_s interrupt_table_t;
 typedef enum interrupt_return_e interrupt_return_t;
+typedef interrupt_return_t (*interrupt_function_t)(u16 hardware_interrupt_number, void* interrupt_arg);
 
 struct interrupt_table_entry_s {
     u16 hardware_interrupt_number;
     void* interrupt_arg;
-    interrupt_return_t (*interrupt_function)(u16 hardware_interrupt_number, void* interrupt_arg);
+    interrupt_function_t interrupt_function;
 };
 
 struct interrupt_table_s {

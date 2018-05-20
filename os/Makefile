@@ -1,6 +1,4 @@
-SUBDIRS := management
-SUBDIRS += video
-
+SUBDIRS := $(shell find . -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 SOURCES := $(wildcard *.c)
 
 CFLAGS := -I../include

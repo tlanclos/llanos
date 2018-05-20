@@ -1,5 +1,5 @@
 SOURCES := $(wildcard *.c)
-OBJECTS := $(SOURCES:%.c=%.o)
+OBJECTS := $(SOURCES:%=%.o)
 
 DEPENDENCIES := $(SOURCES:%=%.d)
 
@@ -13,7 +13,7 @@ $(DEPENDENCIES):%.d: %
 	@echo "	DEP	$@"
 	@$(CC) $(CFLAGS) -MM $< > $@
 
-$(OBJECTS):%.o: %.c
+$(OBJECTS):%.c.o: %.c
 	@echo "	CC	$@"
 	@$(CC) $(CFLAGS) -c -o $@ $<
 

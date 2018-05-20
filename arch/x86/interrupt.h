@@ -2,9 +2,11 @@
 
 #include <llanos/types.h>
 
-#define INTERRUPT_TYPE_INTERRUPT_GATE   (0b01110)
-#define INTERRUPT_TYPE_TRAP_GATE        (0b01111)
-#define INTERRUPT_TYPE_TASK_GATE        (0b00101)
+#define GATE_TYPE_TASK_GATE_32BIT       (0b0101)
+#define GATE_TYPE_INTERRUPT_GATE_16BIT  (0b0110)
+#define GATE_TYPE_TRAP_GATE_16BIT       (0b0111)
+#define GATE_TYPE_INTERRUPT_GATE_32BIT  (0b1110)
+#define GATE_TYPE_TRAP_GATE_32BIT       (0b1111)
 
 #define SEGMENT_SELECTOR_KERNEL_CODE_32BIT      (0x08)
 #define SEGMENT_SELECTOR_KERNEL_DATA_32BIT      (0x10)
@@ -21,16 +23,15 @@ typedef struct idt_entry_s idt_entry_t;
 /**
  * @brief Interrupt Descriptor Table Register
  *
- * idtr.limit (lower 2 bytes) --> | isr255 |
- *                                   ....
- *                                |  isr1  |
- * idtr.base (4 bytes) ---------> |  isr0  |
+ *                        | isr255 |
+ *                           ....
+ *                        |  isr1  |
+ * idtr.base (4 bytes) -> |  isr0  |
  *
- * If the IDT has 256 entries then and the base address is 0x10000000,
- * then limit would be (256*4)-1=1023 or 0x3ff.
+ * If the IDT has 256 entries, then limit would be (256*4)-1=1023 or 0x3ff.
  *
- * @member limit limit represents the upper limit of idtr.
- * @member base base address of idtr.
+ * @member limit limit represents the upper limit of idt.
+ * @member base base address of idt.
  */
 struct idt_register_s {
     u16 limit;
@@ -44,7 +45,8 @@ struct idt_register_s {
  * @member sel segment selector of ISR chosen from SEGMENT_SELECTOR_* (Trap Gate/Interrupt Gate Mode) or 
  *      TSS descriptor (Task Gate Mode)
  * @member always0 Always zero, just set it to zero.
- * @member interrupt_type choose from one of the INTERRUPT_TYPE_* values
+ * @member gate_type choose from one of the GATE_TYPE_* values
+ * @member storage_segment this should be set to 0 for interrupt and trap gates.
  * @member dpl Descriptor Priviledge Level (0 is highest priority, 3 is lowest priority).
  * @member present Present bit 1=available 0=unavailable (whether or not kernel segment is available in RAM)
  * @member base_high higher 16-bits of interrupt function address (unused in Task Gate Mode).
@@ -53,9 +55,10 @@ struct idt_entry_s {
     u16 base_low;
     u16 sel;
     u8 always0;
-    u8 interrupt_type: 5;
-    u8 dpl: 2
-    u8 present: 1;
+    u8 gate_type : 4;
+    u8 storage_segment : 1;
+    u8 dpl : 2;
+    u8 present : 1;
     u16 base_high;
 } __attribute__((packed));
 
@@ -67,7 +70,7 @@ struct idt_entry_s {
  * @param idt IDT to load.
  * @param count Number of entries in IDT.
  */
-extern void build_idtr(idt_register_t* idtr, idt_entry_t* idt, size_t count);
+extern void interrupt_build_idtr(idt_register_t* idtr, idt_entry_t* idt, size_t count);
 
 
 /**
@@ -77,16 +80,26 @@ extern void build_idtr(idt_register_t* idtr, idt_entry_t* idt, size_t count);
  *
  * @param idtr pointer to interrupt descriptor table register to load.
  */
-extern void load_idtr(idt_register_t* idtr);
+extern void interrupt_load_idtr(idt_register_t* idtr);
+
+
+/**
+ * @brief Store Interrupt Descriptor Table Register.
+ *
+ * This is equivalent to the assembly instruction `sidt [idtr]`
+ *
+ * @param idtr pointer to destination interrupt descriptor table register.
+ */
+extern void interrupt_store_idtr(idt_register_t* idtr);
 
 /**
  * @brief load interrupt to IDT.
  *
- * @param isrnum interrupt table number.
+ * @param entry destination IDT entry to setup.
  * @param isr interrupt function base pointer.
  * @param sel segment selector or TSS segment (refer to idt_entry_s.sel).
- * @param interrupt_type interrup type (refer to idt_entry_s.interrupt_type).
+ * @param gate_type gate type (refer to idt_entry_s.gate_type).
  * @param dpl descriptor priviledge level (refer to idt_entry_s.dpl).
  * @param present whether or not kernel segment is available in RAM.
  */
-extern void setup_interrupt(u8 isrnum, (void (*isr)(void)), u8 sel, u8 interrupt_type, u8 dpl, bool present);
+extern void interrupt_setup(idt_entry_t* entry, void (*isr)(void), u8 sel, u8 gate_type, u8 dpl, bool present);

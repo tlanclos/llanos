@@ -25,7 +25,7 @@ $(ISO): $(TARGET) boot/grub.cfg
 	@grub-mkrescue -o $(ISO) .isobuild
 	@rm -rf .isobuild
 
-$(TARGET): $(SUBDIRS)
+$(TARGET): $(SUBDIRS) FORCE
 	@echo "	LD	$@"
 	@$(CROSS_COMPILE)ld -o $@ $(CFLAGS) $(LDFLAGS) `for dir in $(SUBDIRS); do find $${dir} -name *.o; done`
 	@grub-file --is-x86-multiboot "$(TARGET)" || (echo "	MULTIBOOT CHECK FAILED!" && exit 1)

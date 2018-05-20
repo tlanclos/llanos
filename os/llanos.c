@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <llanos/management/memory.h>
 #include <llanos/management/interrupt.h>
+#include <llanos/management/abort.h>
+#include <llanos/management/architecture.h>
 #include <llanos/video/vga.h>
 
 
@@ -10,6 +12,8 @@ int kmain(void) {
     memory_table_t memory;
     vga_t vga;
     int a;
+
+    initialize_architecture();
 
     vga_initialize(
         &vga,
@@ -20,8 +24,6 @@ int kmain(void) {
     get_memory_table(&memory);
 
     load_interrupt_table(NULL);
-
-    a=1/0;
 
     while (1);
 

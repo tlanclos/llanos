@@ -5,7 +5,7 @@ SECTIONS {
     __kernel_load_address = .;
 
     .text BLOCK(4K) : ALIGN(4K) {
-        *(.multiboot)
+        KEEP(*(.multiboot))
         *(.interrupt_table)
         *(.text)
     }

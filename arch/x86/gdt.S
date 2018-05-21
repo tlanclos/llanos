@@ -5,6 +5,7 @@
 gdt_load_gdtr:
     push %ebp
     mov %ebp, %esp
+    
     push %ebx
     mov %eax, [%ebp+8]
     lgdt [%eax]
@@ -14,6 +15,7 @@ gdt_load_gdtr:
     mov %fs, %ax
     mov %gs, %ax
     mov %ss, %ax
+
     mov %esp, %ebp
     pop %ebp
     jmp 0x08:__gdt_load_gdtr_jump

@@ -297,4 +297,5 @@ int main(void) {
     };
 
     testsuite_run_tests(&testsuite);
+    return 0;
 }

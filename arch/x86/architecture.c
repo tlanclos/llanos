@@ -1,7 +1,6 @@
 #include <llanos/types.h>
 #include <llanos/management/architecture.h>
-
-#include <string.h>
+#include <llanos/util/memory.h>
 
 #include "gdt.h"
 #include "interrupt.h"
@@ -37,6 +36,11 @@ idt_entry_t __idt[256] \
  */
 static pic8259_t __pic1;
 static pic8259_t __pic2;
+
+
+static void __generic_interrupt_handler(u32 isrnum) {
+    return;
+}
 
 
 /**
@@ -110,17 +114,18 @@ static void initialize_interrupt_descriptor_table(void) {
     idt_register_t idtr;
     idt_entry_t* entry;
 
-    memset(__idt, 0, sizeof(__idt));
-    build_idtr(&idtr, __idt, sizeof(__idt) / sizeof(idt_entry_t));
-    load_idtr(&idtr);
+    memory_set_value((u8*)__idt, 0, sizeof(__idt));
+    interrupt_build_idtr(&idtr, __idt, sizeof(__idt) / sizeof(idt_entry_t));
+    interrupt_load_idtr(&idtr, __generic_interrupt_handler);
 }
 
 static void initiailize_interrupt_functions(void) {
-    __setup_interrupt(&__idt[0], __isr_handler_0, SEGMENT_SELECTOR_KERNEL_CODE_32BIT, GATE_TYPE_TRAP_GATE_32BIT, 0, true);
+    interrupt_setup(&__idt[0], __isr_handler_0, SEGMENT_SELECTOR_KERNEL_CODE_32BIT, GATE_TYPE_INTERRUPT_GATE_32BIT, 0, true);
 }
 
 void initialize_architecture(void) {
     initialize_global_descriptor_table();
     initialize_pic();
     initialize_interrupt_descriptor_table();
+    initiailize_interrupt_functions();
 }

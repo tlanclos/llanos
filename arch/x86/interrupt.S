@@ -2,9 +2,9 @@
 
 .section .text
 
-.global interrupt_load_idtr
+.global __interrupt_load_idtr
 .align 4
-load_idtr:
+__interrupt_load_idtr:
     push %ebp
     mov %ebp, %esp
 
@@ -20,7 +20,7 @@ load_idtr:
 
 .global interrupt_store_idtr
 .align 4
-store_idtr:
+interrupt_store_idtr:
     push %ebp
     mov %ebp, %esp
 
@@ -34,20 +34,21 @@ store_idtr:
     ret
 
 
-.macro __isr_handle isrnum
+.macro __isr_handler isrnum
 .align 4
-__isr_handle_\isrnum:
+.global __isr_handler_\isrnum
+__isr_handler_\isrnum:
     pushad
-    cmpw generic_interrupt_handle, 0
+    cmpw __generic_interrupt_handler, 0
     je __isr_handle_nocall_\isrnum
-    push 0
-    call generic_interrupt_handle
+    push \isrnum
+    call [__generic_interrupt_handler]
 __isr_handle_nocall_\isrnum:
     popad
     iret
 .endm
 
-__isr_handle 0
-__isr_handle 1
-__isr_handle 2
-__isr_handle 3
+__isr_handler 0
+__isr_handler 1
+__isr_handler 2
+__isr_handler 3

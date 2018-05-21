@@ -74,13 +74,16 @@ extern void interrupt_build_idtr(idt_register_t* idtr, idt_entry_t* idt, size_t 
 
 
 /**
- * @brief Load Interrupt Descriptor Table Register.
+ * @brief Load Interrupt Descriptor Table Register and interrupt handler function to handle interrupts.
  *
- * This is equivalent to the assembly instruction `lidt [idtr]`
+ * This is equivalent to the assembly instruction `lidt [idtr]` along with the addition of setting
+ * the generic interrupt handler in order to process interrupts.
  *
  * @param idtr pointer to interrupt descriptor table register to load.
+ * @param interrupt_handler generic interrupt handler function that takes in the ISR number 
+ *      and switches to the OS passed interrupt functions.
  */
-extern void interrupt_load_idtr(idt_register_t* idtr);
+extern void interrupt_load_idtr(idt_register_t* idtr, void (*interrupt_handler)(u32 isrnum));
 
 
 /**

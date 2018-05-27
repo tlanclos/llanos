@@ -56,8 +56,8 @@ $(SUBDIRS:%=clean-%):%: FORCE
 clean: $(SUBDIRS:%=clean-%)
 	@-rm -f $(TEST_OBJECTS)
 	@-rm -f $(TEST_OBJECTS:%.c.o=%)
-	@-rm -f $(DEPENDENCIES)
-	@-rm -f $(TEST_DEP_OBJECTS)
+	@-rm -f *.c.o
+	@-rm -f *.c.d
 
 FORCE:
 

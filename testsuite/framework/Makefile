@@ -18,8 +18,8 @@ $(OBJECTS):%.c.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
 
 clean: FORCE
-	@-rm -f $(OBJECTS)
-	@-rm -f $(DEPENDENCIES)
+	@-rm -f *.c.o
+	@-rm -f *.c.d
 
 FORCE:
 

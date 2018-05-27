@@ -28,8 +28,8 @@ $(SUBDIRS:%=clean-%):%: FORCE
 	@$(MAKE) -C `echo $@ | cut -d- -f2-` clean
 
 clean: $(SUBDIRS:%=clean-%)
-	@-rm -f $(OBJECTS)
-	@-rm -f $(DEPENDENCIES)
+	@-rm -f *.c.o
+	@-rm -f *.c.d
 
 FORCE:
 

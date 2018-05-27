@@ -8,6 +8,7 @@ OBJECTS := $(SOURCES:%.c=%.c.o)
 DEPENDENCIES := $(SOURCES:%=%.d)
 
 CFLAGS += -std=c11
+CFLAGS += -g
 
 all: build
 

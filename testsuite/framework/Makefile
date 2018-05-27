@@ -4,6 +4,7 @@ OBJECTS := $(SOURCES:%=%.o)
 DEPENDENCIES := $(SOURCES:%=%.d)
 
 CFLAGS += -I../include
+CFLAGS += -g
 
 all: build
 

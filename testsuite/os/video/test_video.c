@@ -1,6 +1,8 @@
 #include <testsuite.h>
 #include <llanos/types.h>
+#include <llanos/limits.h>
 #include <llanos/video/vga.h>
+#include <string.h>
 
 static vga_color_t __extract_vga_color_fg(uint16_t vga_entry) {
     return (vga_color_t)((vga_entry >> 8) & 0x0f);
@@ -47,7 +49,7 @@ static void test_vga_initialize__should__clear_buffer(void) {
     }
 
     vga_initialize(&vga, buffer, vga_get_default_terminal_width(), vga_get_default_terminal_height());
-    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
 }
 
 static void test_vga_initialize__should__reset_cursor_row(void) {
@@ -122,7 +124,7 @@ static void test_vga_put_character__should__wrap_on_newlines(void) {
      * only be the character and no color information. 
      */
     __put_many_characters(&vga, chars, sizeof(chars) / sizeof(char));
-    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
 }
 
 static void test_vga_put_character__should__wrap_to_top_at_end_of_buffer_with_newlines(void) {
@@ -144,7 +146,7 @@ static void test_vga_put_character__should__wrap_to_top_at_end_of_buffer_with_ne
      * only be the character and no color information. 
      */
     __put_many_characters(&vga, chars, sizeof(chars) / sizeof(char));
-    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
 }
 
 static void test_vga_put_character__should__wrap_to_top_at_end_of_buffer_without_newlines(void) {
@@ -166,7 +168,7 @@ static void test_vga_put_character__should__wrap_to_top_at_end_of_buffer_without
      * only be the character and no color information. 
      */
     __put_many_characters(&vga, chars, sizeof(chars) / sizeof(char));
-    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
 }
 
 static void test_vga_put_string__should__put_string_at_cursor(void) {
@@ -189,7 +191,7 @@ static void test_vga_put_string__should__put_string_at_cursor(void) {
      */
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "abc");
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "test");
-    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
 }
 
 static void test_vga_put_string__should__wrap_newlines(void) {
@@ -212,7 +214,7 @@ static void test_vga_put_string__should__wrap_newlines(void) {
      */
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "abc\n");
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "test");
-    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
 }
 
 static void test_vga_put_string__should__wrap_to_top_at_end_of_buffer_with_newlines(void) {
@@ -237,7 +239,7 @@ static void test_vga_put_string__should__wrap_to_top_at_end_of_buffer_with_newli
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "test\n");
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "miss\n");
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "top\n");
-    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
 }
 
 static void test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_newlines(void) {
@@ -261,7 +263,233 @@ static void test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_ne
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "abc\n");
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "test\n");
     vga_put_string(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "miss top");
-    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length);
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_signed_decimal_number_zero(void) {
+    vga_t vga;
+    int width = 10;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', '0', '\0', '\0'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %d", 0);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_signed_decimal_number_positive(void) {
+    vga_t vga;
+    int width = 17;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', '2', '1', '4', '7', '4', '8', '3', '6', '4', '7'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %d", S32MAX);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_signed_decimal_number_negative(void) {
+    vga_t vga;
+    int width = 18;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', '-', '2', '1', '4', '7', '4', '8', '3', '6', '4', '8'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %d", S32MIN);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_unsigned_decimal(void) {
+    vga_t vga;
+    int width = 17;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', '4', '2', '9', '4', '9', '6', '7', '2', '9', '5'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %u", U32MAX);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_unsigned_octal(void) {
+    vga_t vga;
+    int width = 18;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', '3', '7', '7', '7', '7', '7', '7', '7', '7', '7', '7'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %o", U32MAX);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_unsigned_hex(void) {
+    vga_t vga;
+    int width = 15;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %x", U32MAX);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_unsigned_binary(void) {
+    vga_t vga;
+    int width = 39;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', 
+        '1', '1', '1', '1', '1', '1', '1', '1', 
+        '1', '1', '1', '1', '1', '1', '1', '1', 
+        '1', '1', '1', '1', '1', '1', '1', '1', 
+        '1', '1', '1', '1', '1', '1', '1', '1'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %b", U32MAX);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_floating_point(void) {
+    vga_t vga;
+    int width = 15;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', '3', '2', '.', '2', '5', '\0', '\0', '\0'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %f", 32.25);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_scientific_notation(void) {
+    vga_t vga;
+    int width = 15;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', '9', '.', '2', '5', 'e', '-', '1', '0'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %e", 9.25e-10);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_character(void) {
+    vga_t vga;
+    int width = 15;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', 'a', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %c", 'a');
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_string(void) {
+    vga_t vga;
+    int width = 18;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', 's', 'o', 'm', 'e', ' ', 's', 't', 'r', 'i', 'n', 'g'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %s", "some string");
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_string_with_preceeding_length(void) {
+    vga_t vga;
+    int width = 20;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    char bufferstring[] = {'b', 'u', 'f', 'f', 'e', 'r', ' ', 's', 't', 'r', 'i', 'n', 'g'};
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', 'b', 'u', 'f', 'f', 'e', 'r', ' ', 's', 't', 'r', 'i', 'n', 'g'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %S", sizeof(bufferstring) / sizeof(char), bufferstring);
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
+}
+
+static void test_vga_printf__should__print_percent_character(void) {
+    vga_t vga;
+    int width = 15;
+    int height = 1;
+    int length = width * height;
+    uint16_t buffer[length];
+    uint16_t buffer_expected[] = {
+        'v', 'a', 'l', 'u', 'e', ':', ' ', '%', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+    };
+
+    vga_initialize(&vga, buffer, width, height);
+
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "value: %%");
+
+    TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
 }
 
 testfunc_container_t test_function_containers[] = {
@@ -287,7 +515,21 @@ testfunc_container_t test_function_containers[] = {
     {"test_vga_put_string__should__put_string_at_cursor", test_vga_put_string__should__put_string_at_cursor},
     {"test_vga_put_string__should__wrap_newlines", test_vga_put_string__should__wrap_newlines},
     {"test_vga_put_string__should__wrap_to_top_at_end_of_buffer_with_newlines", test_vga_put_string__should__wrap_to_top_at_end_of_buffer_with_newlines},
-    {"test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_newlines", test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_newlines}
+    {"test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_newlines", test_vga_put_string__should__wrap_to_top_at_end_of_buffer_without_newlines},
+
+    {"test_vga_printf__should__print_signed_decimal_number_zero", test_vga_printf__should__print_signed_decimal_number_zero},
+    {"test_vga_printf__should__print_signed_decimal_number_positive", test_vga_printf__should__print_signed_decimal_number_positive},
+    {"test_vga_printf__should__print_signed_decimal_number_negative", test_vga_printf__should__print_signed_decimal_number_negative},
+    {"test_vga_printf__should__print_unsigned_decimal", test_vga_printf__should__print_unsigned_decimal},
+    {"test_vga_printf__should__print_unsigned_octal", test_vga_printf__should__print_unsigned_octal},
+    {"test_vga_printf__should__print_unsigned_hex", test_vga_printf__should__print_unsigned_hex},
+    {"test_vga_printf__should__print_unsigned_binary", test_vga_printf__should__print_unsigned_binary},
+    {"test_vga_printf__should__print_floating_point", test_vga_printf__should__print_floating_point},
+    {"test_vga_printf__should__print_scientific_notation", test_vga_printf__should__print_scientific_notation},
+    {"test_vga_printf__should__print_character", test_vga_printf__should__print_character},
+    {"test_vga_printf__should__print_string", test_vga_printf__should__print_string},
+    {"test_vga_printf__should__print_string_with_preceeding_length", test_vga_printf__should__print_string_with_preceeding_length},
+    {"test_vga_printf__should__print_percent_character", test_vga_printf__should__print_percent_character}
 };
 
 int main(void) {

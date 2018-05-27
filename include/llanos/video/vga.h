@@ -91,3 +91,32 @@ extern void vga_put_character(vga_t* vga, vga_color_t color_fg, vga_color_t colo
  * @param str string to into the vga.
  */
 extern void vga_put_string(vga_t* vga, vga_color_t color_fg, vga_color_t color_bg, const char* str);
+
+
+/**
+ * @brief Print a formatted string to the terminal.
+ *
+ * @param vga vga to print the formatted string to.
+ * @param color_fg color of the character in the forground.
+ * @param color_bg color of the character in the background.
+ * @param format format speicifier for the string.
+ *      A format specifier follows this prototype: %[specifier]
+ *          where the specifier character at the end is the most signuifican component.
+ *
+ *      | speicifier    | output                        | example   |
+ *      |---------------|-------------------------------|-----------|
+ *      | d             | signed integer                | -239      |
+ *      | u             | unsigned integer              | 234       |
+ *      | o             | unsigned octal                | 610       |
+ *      | x             | unsigned hex                  | 7aa       |
+ *      | b             | unsigned binary               | 1101001   |
+ *      | f             | floating point                | 32.25     |
+ *      | e             | scientific notation           | 2.25e-3   |
+ *      | c             | character                     | a         |
+ *      | s             | string                        | abc       |
+ *      | S             | string with preceeding length | abc       |
+ *      | %             | the percent character         | %         |
+ *
+ * @param ... additional arguments.
+ */
+extern void vga_printf(vga_t* vga, vga_color_t color_fg, vga_color_t color_bg, const char* format, ...);

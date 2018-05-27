@@ -16,6 +16,7 @@ CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -Werror
 CFLAGS += -std=c11
+CFLAGS += -fPIC
 CFLAGS += -g
 CFLAGS += -I$(REPO_ROOT)/include
 CFLAGS += -I$(REPO_ROOT)/testsuite/include

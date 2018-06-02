@@ -21,8 +21,7 @@ int kmain(void) {
         vga_get_default_terminal_height()
     );
     get_memory_table(&memory);
-
-    load_interrupt_table(NULL);
+    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_RED, "test %d", -123);
 
     while (1);
 

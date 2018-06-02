@@ -1,4 +1,5 @@
 #include <llanos/types.h>
+#include <llanos/management/abort.h>
 
 #include "pic8259.h"
 
@@ -20,8 +21,7 @@ static u8 pic8259_get_buffered_mode_byte(pic8259_buffered_mode_t mode) {
     } else if (mode == PIC8259_BUFFERED_MODE_MASTER) {
         return 3;
     } else {
-        /* todo: should abort kernel here */
-        return 0;
+        abort(-1, NULL);
     }
 }
 

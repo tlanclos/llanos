@@ -26,3 +26,4 @@ struct memory_table_s {
  * @param memory_table pointer to where the memory table should be stored.
  */
 extern void get_memory_table(memory_table_t* memory_table);
+

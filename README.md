@@ -1,4 +1,4 @@
-# LlanOS - Experimental, Partially Functional, OS Kernel
+# LlanOS - Experimental, Functional, OS Kernel
 ---
 
 ### Description

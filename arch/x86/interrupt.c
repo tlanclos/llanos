@@ -1,5 +1,4 @@
 #include <llanos/types.h>
-#include <llanos/management/interrupt.h>
 
 #include "interrupt.h"
 
@@ -34,15 +33,4 @@ void interrupt_setup(idt_entry_t* entry, void (*isr)(void), u8 sel, u8 gate_type
     entry->storage_segment = 0;
     entry->dpl = dpl;
     entry->present = present ? 1 : 0;
-}
-
-extern void load_interrupt_table(const interrupt_table_t* interrupt_table) {
-	int i;
-	interrupt_table_entry_t* entry;
-
-
-	// for (i = 0; i < interrupt_table->length; i++) {
-	// 	entry = &interrupt_table->entries[i];
-
-	// }
 }

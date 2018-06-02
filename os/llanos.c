@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <llanos/management/memory.h>
-#include <llanos/management/interrupt.h>
 #include <llanos/management/abort.h>
 #include <llanos/management/architecture.h>
 #include <llanos/video/vga.h>

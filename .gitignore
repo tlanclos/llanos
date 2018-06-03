@@ -2,7 +2,7 @@
 !*.*
 !*/
 !Makefile
-*.c.d
+*.d
 *.o
 bin/
 */bin/*

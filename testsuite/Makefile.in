@@ -1,5 +1,10 @@
 REPO_ROOT := $(shell git rev-parse --show-toplevel)
+CROSS_COMPILE := 
+export CROSS_COMPILE
 include $(REPO_ROOT)/Defaults.in
+
+GCC_ARCH := $(shell $(CC) -dumpmachine)
+export GCC_ARCH
 
 SUBDIRS ?= 
 TEST_SOURCES ?=
@@ -7,10 +12,10 @@ TEST_DEP_SOURCES ?=
 
 TEST_DEP_SOURCES += $(wildcard $(REPO_ROOT)/testsuite/framework/*.c)
 
-TEST_OBJECTS := $(TEST_SOURCES:%.c=%.c.o)
-TEST_DEP_OBJECTS := $(TEST_DEP_SOURCES:%.c=%.c.o)
+TEST_OBJECTS := $(TEST_SOURCES:%.c=%.c.$(GCC_ARCH).o)
+TEST_DEP_OBJECTS := $(TEST_DEP_SOURCES:%.c=%.c.$(GCC_ARCH).o)
 
-DEPENDENCIES := $(TEST_SOURCES:%=%.d)
+DEPENDENCIES := $(TEST_SOURCES:%=%.$(GCC_ARCH).d)
 
 CFLAGS += -Wall
 CFLAGS += -Wextra
@@ -23,43 +28,43 @@ CFLAGS += -I$(REPO_ROOT)/testsuite/include
 
 all: build
 
-build: $(SUBDIRS) $(TEST_OBJECTS:%.c.o=%)
+build: $(SUBDIRS) $(TEST_OBJECTS:%.c.$(GCC_ARCH).o=%)
 
 $(SUBDIRS):%: FORCE
 	@$(MAKE) -C $@ build
 
-$(TEST_DEP_OBJECTS):%.c.o: FORCE
+$(TEST_DEP_OBJECTS):%.c.$(GCC_ARCH).o: FORCE
 	@$(MAKE) -C $(@D) $(@F)
 
-$(DEPENDENCIES):%.d: %
+$(DEPENDENCIES):%.$(GCC_ARCH).d: %
 	@echo "	DEP	$@"
 	@$(CC) $(CFLAGS) -MM $< > $@
 
-$(TEST_OBJECTS:%.c.o=%):%: %.c.o $(TEST_DEP_OBJECTS)
+$(TEST_OBJECTS:%.c.$(GCC_ARCH).o=%):%: %.c.$(GCC_ARCH).o $(TEST_DEP_OBJECTS)
 	@echo "	LD	$@"
 	@$(CC) -o $@ $(CFLAGS) $^ -lgcc
 
-$(TEST_OBJECTS):%.o: %
+$(TEST_OBJECTS):%.$(GCC_ARCH).o: %
 	@echo "	CC	$@"
 	@$(CC) -c -o $@ $(CFLAGS) $<
 
 $(SUBDIRS:%=run-%):%: FORCE
 	@$(MAKE) -C `echo $@ | cut -d- -f2-` run
 
-$(TEST_OBJECTS:%.c.o=run-%): $(TEST_OBJECTS:%.c.o=%)
+$(TEST_OBJECTS:%.c.$(GCC_ARCH).o=run-%): $(TEST_OBJECTS:%.c.$(GCC_ARCH).o=%)
 	@echo "	TST	`echo $@ | cut -d- -f2-`"
 	@./`echo $@ | cut -d- -f2-`
 
-run: $(SUBDIRS:%=run-%) $(TEST_OBJECTS:%.c.o=run-%)
+run: $(SUBDIRS:%=run-%) $(TEST_OBJECTS:%.c.$(GCC_ARCH).o=run-%)
 
 $(SUBDIRS:%=clean-%):%: FORCE
 	@$(MAKE) -C `echo $@ | cut -d- -f2-` clean
 
 clean: $(SUBDIRS:%=clean-%)
+	@-rm -f $(TEST_OBJECTS:%.c.$(GCC_ARCH).o=%)
 	@-rm -f $(TEST_OBJECTS)
-	@-rm -f $(TEST_OBJECTS:%.c.o=%)
-	@-rm -f *.c.o
-	@-rm -f *.c.d
+	@-rm -f *.o
+	@-rm -f *.d
 
 FORCE:
 

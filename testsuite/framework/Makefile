@@ -1,7 +1,9 @@
 SOURCES := $(wildcard *.c)
-OBJECTS := $(SOURCES:%=%.o)
+GCC_ARCH := $(shell $(CC) -dumpmachine)
+export GCC_ARCH
 
-DEPENDENCIES := $(SOURCES:%=%.d)
+OBJECTS := $(SOURCES:%=%.$(GCC_ARCH).o)
+DEPENDENCIES := $(SOURCES:%=%.$(GCC_ARCH).d)
 
 CFLAGS += -I../include
 CFLAGS += -g
@@ -10,17 +12,17 @@ all: build
 
 build: $(OBJECTS)
 
-$(DEPENDENCIES):%.d: %
+$(DEPENDENCIES):%.$(GCC_ARCH).d: %
 	@echo "	DEP	$@"
 	@$(CC) $(CFLAGS) -MM $< > $@
 
-$(OBJECTS):%.c.o: %.c
+$(OBJECTS):%.c.$(GCC_ARCH).o: %.c
 	@echo "	CC	$@"
 	@$(CC) $(CFLAGS) -c -o $@ $<
 
 clean: FORCE
-	@-rm -f *.c.o
-	@-rm -f *.c.d
+	@-rm -f *.o
+	@-rm -f *.d
 
 FORCE:
 

@@ -1,5 +1,7 @@
 CROSS_COMPILE ?= 
+GCC_ARCH := $(shell $(CROSS_COMPILE)gcc -dumpmachine)
 export CROSS_COMPILE
+export GCC_ARCH
 
 ASM_SOURCES := $(wildcard *.S)
 C_SOURCES := $(wildcard *.c)
@@ -12,13 +14,13 @@ CFLAGS += -std=c11
 
 all: build
 
-build: $(ASM_SOURCES:.S=.S.o) $(C_SOURCES:.c=.c.o)
+build: $(ASM_SOURCES:.S=.S.$(GCC_ARCH).o) $(C_SOURCES:.c=.c.$(GCC_ARCH).o)
 
-$(ASM_SOURCES:.S=.S.o):%.S.o: %.S linker.ld
+$(ASM_SOURCES:.S=.S.$(GCC_ARCH).o):%.S.$(GCC_ARCH).o: %.S linker.ld
 	@echo "	ASM	$@"
 	@$(CROSS_COMPILE)gcc -masm=intel $(CFLAGS) -D__ASM__ -c -o $@ $<
 
-$(C_SOURCES:.c=.c.o):%.c.o: %.c linker.ld
+$(C_SOURCES:.c=.c.$(GCC_ARCH).o):%.c.$(GCC_ARCH).o: %.c linker.ld
 	@echo "	CC	$@"
 	@$(CROSS_COMPILE)gcc -c -o $@ $(CFLAGS) $<
 

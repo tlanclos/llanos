@@ -1,4 +1,5 @@
 CROSS_COMPILE ?=
 ARCH ?= x86
+CC := $(CROSS_COMPILE)gcc
 export CROSS_COMPILE
 export ARCH

@@ -1,4 +1,5 @@
 #include <llanos/util/crypt.h>
+#include <llanos/util/string.h>
 
 const u32 __crc32_table[] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
@@ -58,5 +59,5 @@ u32 crc32(u8* data, u32 length) {
 }
 
 u32 crc32str(const char* str) {
-    return crc32((u8*)str, strlen(str));
+    return crc32((u8*)str, string_length(str));
 }

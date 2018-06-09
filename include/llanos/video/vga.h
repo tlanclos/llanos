@@ -120,3 +120,26 @@ extern void vga_put_string(vga_t* vga, vga_color_t color_fg, vga_color_t color_b
  * @param ... additional arguments.
  */
 extern void vga_printf(vga_t* vga, vga_color_t color_fg, vga_color_t color_bg, const char* format, ...);
+
+
+/**
+ * @brief Test is first == second.
+ * 
+ * This function will test all components of the VGA and ensure they are equal.
+ * VGAs cannot be equal unless their buffers, and sizes are equal. This function
+ * runs in O(1) time because it will not check the contents of the buffer address,
+ * only the address itself.
+ *
+ * @param first first VGA to check against.
+ * @param second second VGA to check against.
+ * @return false if VGAs are not equal, true if VGAs are equal.
+ */
+extern bool vga_equal(vga_t* first, vga_t* second);
+
+/**
+ * @brief Copy source VGA to dest VGA.
+ *
+ * @param dest VGA to copy source into.
+ * @param source VGA to copy from.
+ */
+extern void vga_copy(vga_t* dest, vga_t* source);

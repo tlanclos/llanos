@@ -353,3 +353,20 @@ void vga_printf(vga_t* vga, vga_color_t color_fg, vga_color_t color_bg, const ch
     }
     va_end(vl);
 }
+
+
+bool vga_equal(vga_t* first, vga_t* second) {
+    return first->buffer_address == second->buffer_address && \
+        first->cursor_row == second->cursor_row && \
+        first->cursor_col == second->cursor_col && \
+        first->terminal_width == second->terminal_width && \
+        first->terminal_height == second->terminal_height;
+}
+
+void vga_copy(vga_t* dest, vga_t* source) {
+    dest->buffer_address = source->buffer_address;
+    dest->cursor_row = source->cursor_row;
+    dest->cursor_col = source->cursor_col;
+    dest->terminal_width = source->terminal_width;
+    dest->terminal_height = source->terminal_height;
+}

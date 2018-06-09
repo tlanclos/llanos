@@ -628,6 +628,110 @@ static void test_vga_printf__should__print_percent_character(void) {
     TEST_ASSERT_EQUAL_MEMORY(buffer_expected, buffer, length * sizeof(uint16_t));
 }
 
+static void test_vga_equal__should__equal_if_all_components_are_equal(void) {
+    vga_t first;
+    vga_t second;
+    int width = 10;
+    int height = 10;
+    uint16_t buffer[width * height];
+
+    vga_initialize(&first, buffer, width, height);
+    vga_initialize(&second, buffer, width, height);
+
+    TEST_ASSERT_TRUE(vga_equal(&first, &second));
+}
+
+static void test_vga_equal__should__not_equal_if_buffer_addresses_are_not_equal(void) {
+    vga_t first;
+    vga_t second;
+    int width = 10;
+    int height = 10;
+    uint16_t buffer[width * height];
+    uint16_t buffer2[width * height];
+
+    vga_initialize(&first, buffer, width, height);
+    vga_initialize(&second, buffer2, width, height);
+
+    TEST_ASSERT_FALSE(vga_equal(&first, &second));
+}
+
+static void test_vga_equal__should__not_equal_if_widths_are_not_equal(void) {
+    vga_t first;
+    vga_t second;
+    int width = 10;
+    int height = 10;
+    uint16_t buffer[width * height];
+
+    vga_initialize(&first, buffer, width - 1, height);
+    vga_initialize(&second, buffer, width, height);
+
+    TEST_ASSERT_FALSE(vga_equal(&first, &second));
+}
+
+static void test_vga_equal__should__not_equal_if_heights_are_not_equal(void) {
+    vga_t first;
+    vga_t second;
+    int width = 10;
+    int height = 10;
+    uint16_t buffer[width * height];
+
+    vga_initialize(&first, buffer, width, height - 1);
+    vga_initialize(&second, buffer, width, height);
+
+    TEST_ASSERT_FALSE(vga_equal(&first, &second));
+}
+
+static void test_vga_equal__should__not_equal_if_cursor_col_are_not_equal(void) {
+    vga_t first;
+    vga_t second;
+    int width = 10;
+    int height = 10;
+    uint16_t buffer[width * height];
+
+    vga_initialize(&first, buffer, width, height);
+    vga_initialize(&second, buffer, width, height);
+
+    /* put 1 character so the rows are equal, but the columns are not */
+    vga_put_character(&first, VGA_COLOR_BLACK, VGA_COLOR_BLACK, 'a');
+
+    TEST_ASSERT_FALSE(vga_equal(&first, &second));
+}
+
+static void test_vga_equal__should__not_equal_if_cursor_row_are_not_equal(void) {
+    vga_t first;
+    vga_t second;
+    int width = 10;
+    int height = 10;
+    uint16_t buffer[width * height];
+
+    vga_initialize(&first, buffer, width, height);
+    vga_initialize(&second, buffer, width, height);
+
+    /* fill up the first row where the columns are equal, but rows are not */
+    vga_put_string(&first, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "aaaaaaaaaa");
+
+    TEST_ASSERT_FALSE(vga_equal(&first, &second));
+}
+
+static void test_vga_copy__should__copy_all_parameters_from_source_vga_to_dest_vga(void) {
+    vga_t source;
+    vga_t destination;
+    int width = 10;
+    int height = 10;
+    uint16_t buffer[width * height];
+    uint16_t otherbuffer[(width - 1) * (height - 1)];
+
+    vga_initialize(&source, buffer, width, height);
+
+    /* put a string to move current column and row to different values */
+    vga_put_string(&source, VGA_COLOR_BLACK, VGA_COLOR_BLACK, "aaaaaaaaaaaa");
+
+    vga_initialize(&destination, otherbuffer, width - 1, height - 1);
+
+    vga_copy(&destination, &source);
+    TEST_ASSERT_TRUE(vga_equal(&destination, &source));
+}
+
 testfunc_container_t test_function_containers[] = {
     {"test_vga_get_default_terminal_width__should__return_80", test_vga_get_default_terminal_width__should__return_80},
     
@@ -673,7 +777,16 @@ testfunc_container_t test_function_containers[] = {
     {"test_vga_printf__should__print_character", test_vga_printf__should__print_character},
     {"test_vga_printf__should__print_string", test_vga_printf__should__print_string},
     {"test_vga_printf__should__print_string_with_preceeding_length", test_vga_printf__should__print_string_with_preceeding_length},
-    {"test_vga_printf__should__print_percent_character", test_vga_printf__should__print_percent_character}
+    {"test_vga_printf__should__print_percent_character", test_vga_printf__should__print_percent_character},
+
+    {"test_vga_equal__should__equal_if_all_components_are_equal", test_vga_equal__should__equal_if_all_components_are_equal},
+    {"test_vga_equal__should__not_equal_if_buffer_addresses_are_not_equal", test_vga_equal__should__not_equal_if_buffer_addresses_are_not_equal},
+    {"test_vga_equal__should__not_equal_if_widths_are_not_equal", test_vga_equal__should__not_equal_if_widths_are_not_equal},
+    {"test_vga_equal__should__not_equal_if_heights_are_not_equal", test_vga_equal__should__not_equal_if_heights_are_not_equal},
+    {"test_vga_equal__should__not_equal_if_cursor_col_are_not_equal", test_vga_equal__should__not_equal_if_cursor_col_are_not_equal},
+    {"test_vga_equal__should__not_equal_if_cursor_row_are_not_equal", test_vga_equal__should__not_equal_if_cursor_row_are_not_equal},
+
+    {"test_vga_copy__should__copy_all_parameters_from_source_vga_to_dest_vga", test_vga_copy__should__copy_all_parameters_from_source_vga_to_dest_vga}
 };
 
 int main(void) {

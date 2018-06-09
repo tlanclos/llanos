@@ -5,6 +5,7 @@
 #include <llanos/management/abort.h>
 #include <llanos/management/architecture.h>
 #include <llanos/video/vga.h>
+#include <llanos/llanos.h>
 
 
 int kmain(void) {
@@ -13,15 +14,10 @@ int kmain(void) {
     int a;
 
     initialize_architecture();
+    reset_llanos_vga();
 
-    vga_initialize(
-        &vga,
-        vga_get_default_buffer_address(),
-        vga_get_default_terminal_width(),
-        vga_get_default_terminal_height()
-    );
     get_memory_table(&memory);
-    vga_printf(&vga, VGA_COLOR_BLACK, VGA_COLOR_RED, "test %d", -123);
+    vga_printf(get_llanos_vga(), VGA_COLOR_BLACK, VGA_COLOR_LIGHT_CYAN, "test %d %s %e", -123, "this is some string", 9.2343e+18);
 
     while (1);
 

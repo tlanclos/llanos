@@ -39,9 +39,10 @@ static pic8259_t __pic1;
 static pic8259_t __pic2;
 
 /*
- * Paging Directory
+ * Paging Directory and Paging Tables
  */
 static page_directory_entry_t __page_directory[1024];
+static page_table_entry_t __page_tables[sizeof(__page_directory) / sizeof(page_directory_entry_t)][1024];
 
 
 static void __generic_interrupt_handler(u32 isrnum) {
@@ -392,7 +393,12 @@ static void initialize_interrupt_functions(void) {
 
 
 static void initialize_paging(void) {
-    
+    int i;
+
+    /* clear all entries in page directory */
+    for (i = 0; i < sizeof(__page_directory) / sizeof(page_directory_entry_t); i++) {
+        __page_directory[i] = 0;
+    }
 }
 
 void initialize_architecture(void) {

@@ -1,9 +1,16 @@
+.intel_syntax noprefix
+
+.section .text
+
 .global paging_set_page_directory
 paging_set_page_directory:
     push %ebp
     mov %ebp, %esp
 
-    mov %cr3, [%ebp+8]
+    push %eax
+    mov %eax, [%ebp+8]
+    mov %cr3, %eax
+    pop %eax
 
     mov %esp, %ebp
     pop %ebp

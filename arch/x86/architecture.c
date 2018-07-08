@@ -6,6 +6,7 @@
 #include "interrupt.h"
 #include "pic8259.h"
 #include "isrhandler.h"
+#include "paging.h"
 
 /* PIC start and end addresses [start, end) */
 #define PIC1_START_ADDRESS      32
@@ -36,6 +37,11 @@ idt_entry_t __idt[256] \
  */
 static pic8259_t __pic1;
 static pic8259_t __pic2;
+
+/*
+ * Paging Directory
+ */
+static page_directory_entry_t __page_directory[1024];
 
 
 static void __generic_interrupt_handler(u32 isrnum) {
@@ -125,7 +131,7 @@ static void initialize_interrupt_descriptor_table(void) {
  * This function will initialize all interrupts with a function that will
  * call the generic interrupt function.
  */
-static void initiailize_interrupt_functions(void) {
+static void initialize_interrupt_functions(void) {
     interrupt_setup(&__idt[0], __isr_handler_0, SEGMENT_SELECTOR_KERNEL_CODE_32BIT, GATE_TYPE_INTERRUPT_GATE_32BIT, 0, true);
     interrupt_setup(&__idt[1], __isr_handler_1, SEGMENT_SELECTOR_KERNEL_CODE_32BIT, GATE_TYPE_INTERRUPT_GATE_32BIT, 0, true);
     interrupt_setup(&__idt[2], __isr_handler_2, SEGMENT_SELECTOR_KERNEL_CODE_32BIT, GATE_TYPE_INTERRUPT_GATE_32BIT, 0, true);
@@ -384,9 +390,15 @@ static void initiailize_interrupt_functions(void) {
     interrupt_setup(&__idt[255], __isr_handler_255, SEGMENT_SELECTOR_KERNEL_CODE_32BIT, GATE_TYPE_INTERRUPT_GATE_32BIT, 0, true);
 }
 
+
+static void initialize_paging(void) {
+    
+}
+
 void initialize_architecture(void) {
     initialize_global_descriptor_table();
     initialize_pic();
     initialize_interrupt_descriptor_table();
-    initiailize_interrupt_functions();
+    initialize_interrupt_functions();
+    initialize_paging();
 }

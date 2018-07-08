@@ -17,7 +17,15 @@ int kmain(void) {
     reset_llanos_vga();
 
     get_memory_table(&memory);
-    vga_printf(get_llanos_vga(), VGA_COLOR_BLACK, VGA_COLOR_LIGHT_CYAN, "test %d %s %e", -123, "this is some string", 9.2343e+18);
+    vga_printf(
+        get_llanos_vga(), 
+        VGA_COLOR_BLACK, 
+        VGA_COLOR_LIGHT_CYAN, 
+        "test %d %s %e", 
+        -123, 
+        "this is some string",
+        9.2343e+18
+    );
 
     while (1);
 

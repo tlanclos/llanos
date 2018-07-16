@@ -26,7 +26,7 @@ extern void range_init(range_t* range, s64 start, s64 end);
  *
  * @param value value to check.
  * @param range range to check for value.
- * @return true if value is with the range, 
+ * @return true if value is with the range,
  *      false if value is not in the range.
  */
 extern bool in_range(s64 value, range_t* range);
@@ -59,3 +59,33 @@ extern bool range_intersection(range_t* intersection, range_t* range1, range_t* 
  * @return false if the ranges are disjoint and cannot be joined, true if the ranges were joinable.
  */
 extern bool range_join(range_t* join, range_t* range1, range_t* range2);
+
+/**
+ * @brief Perform division and modulus of numerator / denominator
+ *      and numerator % denominator.
+ *
+ * @param numerator numerator of the division equation.
+ * @param denominator denominator of the division equation.
+ * @param remainder if not null, this value will be set
+ *      to the remainder of the division.
+ * @return the result of numerator / denominator.
+ */
+extern u64 divmod_u64(u64 numerator, u64 denominator, u64* remainder);
+
+/**
+ * @brief Peform the modulus of numerator % denominator.
+ *
+ * @param numerator numerator of the modulus equation.
+ * @param denominator denominator of the modulus equation.
+ * @return the result of numerator % denominator.
+ */
+extern u64 modulus_u64(u64 numerator, u64 denominator);
+
+/**
+ * @brief Peform the division of numerator / denominator.
+ *
+ * @param numerator numerator of the division equation.
+ * @param denominator denominator of the division equation.
+ * @return the result of numerator / denominator.
+ */
+extern u64 divide_u64(u64 numerator, u64 denominator);

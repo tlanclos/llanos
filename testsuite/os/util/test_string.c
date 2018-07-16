@@ -14,9 +14,9 @@ static void test_string_length__should__stop_on_null_character(void) {
 }
 
 testfunc_container_t test_function_containers[] = {
-    {"test_string_length__should__return_zero_on_empty_string", test_string_length__should__return_zero_on_empty_string},
-    {"test_string_length__should__return_length_of_string", test_string_length__should__return_length_of_string},
-    {"test_string_length__should__stop_on_null_character", test_string_length__should__stop_on_null_character},
+    {"string_length should return 0 on empty string", test_string_length__should__return_zero_on_empty_string},
+    {"string_length should return length of string", test_string_length__should__return_length_of_string},
+    {"string_length should stop on null character", test_string_length__should__stop_on_null_character},
 };
 
 int main(void) {

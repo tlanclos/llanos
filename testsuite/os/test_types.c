@@ -132,37 +132,37 @@ static void test_cast_u8_to_s8__should__cast_to_the_correct_value(void) {
 }
 
 testfunc_container_t test_function_containers[] = {
-    {"test_cast_s64_to_u64__should__return_false_on_negative_values", test_cast_s64_to_u64__should__return_false_on_negative_values},
-    {"test_cast_s64_to_u64__should__return_true_if_can_fit", test_cast_s64_to_u64__should__return_true_if_can_fit},
-    {"test_cast_s64_to_u64__should__cast_to_the_correct_value", test_cast_s64_to_u64__should__cast_to_the_correct_value},
+    {"cast_s64_to_u64 should return false on negative values", test_cast_s64_to_u64__should__return_false_on_negative_values},
+    {"cast_s64_to_u64 should return true if can fit", test_cast_s64_to_u64__should__return_true_if_can_fit},
+    {"cast_s64_to_u64 should cast to the correct value", test_cast_s64_to_u64__should__cast_to_the_correct_value},
 
-    {"test_cast_u64_to_s64__should__return_false_on_value_too_large", test_cast_u64_to_s64__should__return_false_on_value_too_large},
-    {"test_cast_u64_to_s64__should__return_true_on_value_can_fit", test_cast_u64_to_s64__should__return_true_on_value_can_fit},
-    {"test_cast_u64_to_s64__should__cast_to_the_correct_value", test_cast_u64_to_s64__should__cast_to_the_correct_value},
+    {"cast_u64_to_s64 should return false on value too large", test_cast_u64_to_s64__should__return_false_on_value_too_large},
+    {"cast_u64_to_s64 should return true on value can fit", test_cast_u64_to_s64__should__return_true_on_value_can_fit},
+    {"cast_u64_to_s64 should cast to the correct value", test_cast_u64_to_s64__should__cast_to_the_correct_value},
 
-    {"test_cast_s32_to_u32__should__return_false_on_negative_values", test_cast_s32_to_u32__should__return_false_on_negative_values},
-    {"test_cast_s32_to_u32__should__return_true_if_can_fit", test_cast_s32_to_u32__should__return_true_if_can_fit},
-    {"test_cast_s32_to_u32__should__cast_to_the_correct_value", test_cast_s32_to_u32__should__cast_to_the_correct_value},
+    {"cast_s32_to_u32 should return false on negative values", test_cast_s32_to_u32__should__return_false_on_negative_values},
+    {"cast_s32_to_u32 should return true if can fit", test_cast_s32_to_u32__should__return_true_if_can_fit},
+    {"cast_s32_to_u32 should cast to the correct value", test_cast_s32_to_u32__should__cast_to_the_correct_value},
 
-    {"test_cast_u32_to_s32__should__return_false_on_value_too_large", test_cast_u32_to_s32__should__return_false_on_value_too_large},
-    {"test_cast_u32_to_s32__should__return_true_on_value_can_fit", test_cast_u32_to_s32__should__return_true_on_value_can_fit},
-    {"test_cast_u32_to_s32__should__cast_to_the_correct_value", test_cast_u32_to_s32__should__cast_to_the_correct_value},
+    {"cast_u32_to_s32 should return false on value too large", test_cast_u32_to_s32__should__return_false_on_value_too_large},
+    {"cast_u32_to_s32 should return true on value can fit", test_cast_u32_to_s32__should__return_true_on_value_can_fit},
+    {"cast_u32_to_s32 should cast to the correct value", test_cast_u32_to_s32__should__cast_to_the_correct_value},
     
-    {"test_cast_s16_to_u16__should__return_false_on_negative_values", test_cast_s16_to_u16__should__return_false_on_negative_values},
-    {"test_cast_s16_to_u16__should__return_true_if_can_fit", test_cast_s16_to_u16__should__return_true_if_can_fit},
-    {"test_cast_s16_to_u16__should__cast_to_the_correct_value", test_cast_s16_to_u16__should__cast_to_the_correct_value},
+    {"cast_s16_to_u16 should return false on negative values", test_cast_s16_to_u16__should__return_false_on_negative_values},
+    {"cast_s16_to_u16 should return true if can fit", test_cast_s16_to_u16__should__return_true_if_can_fit},
+    {"cast_s16_to_u16 should cast to the correct value", test_cast_s16_to_u16__should__cast_to_the_correct_value},
 
-    {"test_cast_u16_to_s16__should__return_false_on_value_too_large", test_cast_u16_to_s16__should__return_false_on_value_too_large},
-    {"test_cast_u16_to_s16__should__return_true_on_value_can_fit", test_cast_u16_to_s16__should__return_true_on_value_can_fit},
-    {"test_cast_u16_to_s16__should__cast_to_the_correct_value", test_cast_u16_to_s16__should__cast_to_the_correct_value},
+    {"cast_u16_to_s16 should return false on value too large", test_cast_u16_to_s16__should__return_false_on_value_too_large},
+    {"cast_u16_to_s16 should return true on value can fit", test_cast_u16_to_s16__should__return_true_on_value_can_fit},
+    {"cast_u16_to_s16 should cast to the correct value", test_cast_u16_to_s16__should__cast_to_the_correct_value},
     
-    {"test_cast_s8_to_u8__should__return_false_on_negative_values", test_cast_s8_to_u8__should__return_false_on_negative_values},
-    {"test_cast_s8_to_u8__should__return_true_if_can_fit", test_cast_s8_to_u8__should__return_true_if_can_fit},
-    {"test_cast_s8_to_u8__should__cast_to_the_correct_value", test_cast_s8_to_u8__should__cast_to_the_correct_value},
+    {"cast_s8_to_u8 should return false on negative values", test_cast_s8_to_u8__should__return_false_on_negative_values},
+    {"cast_s8_to_u8 should return true if can fit", test_cast_s8_to_u8__should__return_true_if_can_fit},
+    {"cast_s8_to_u8 should cast to the correct value", test_cast_s8_to_u8__should__cast_to_the_correct_value},
 
-    {"test_cast_u8_to_s8__should__return_false_on_value_too_large", test_cast_u8_to_s8__should__return_false_on_value_too_large},
-    {"test_cast_u8_to_s8__should__return_true_on_value_can_fit", test_cast_u8_to_s8__should__return_true_on_value_can_fit},
-    {"test_cast_u8_to_s8__should__cast_to_the_correct_value", test_cast_u8_to_s8__should__cast_to_the_correct_value},
+    {"cast_u8_to_s8 should return false on value too large", test_cast_u8_to_s8__should__return_false_on_value_too_large},
+    {"cast_u8_to_s8 should return true on value can fit", test_cast_u8_to_s8__should__return_true_on_value_can_fit},
+    {"cast_u8_to_s8 should cast to the correct value", test_cast_u8_to_s8__should__cast_to_the_correct_value},
 };
 
 int main(void) {

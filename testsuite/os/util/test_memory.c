@@ -19,8 +19,8 @@ static void test_memory_set_value__should__set_memory_starting_at_dest_pointer_f
 }
 
 testfunc_container_t test_function_containers[] = {
-    {"test_memory_set_value__should__set_nothing_on_zero_length", test_memory_set_value__should__set_nothing_on_zero_length},
-    {"test_memory_set_value__should__set_memory_starting_at_dest_pointer_for_length_bytes", test_memory_set_value__should__set_memory_starting_at_dest_pointer_for_length_bytes}
+    {"memory_set_value should set nothing on zero length", test_memory_set_value__should__set_nothing_on_zero_length},
+    {"memory_set_value should set memory starting at dest pointer for length bytes", test_memory_set_value__should__set_memory_starting_at_dest_pointer_for_length_bytes}
 };
 
 int main(void) {

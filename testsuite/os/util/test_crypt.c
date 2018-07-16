@@ -18,10 +18,10 @@ static void test_crc32str__should__on_words_return_crc32_jamcrc(void) {
 }
 
 testfunc_container_t test_function_containers[] = {
-    {"test_crc32__should__on_empty_string_return_0xffffffff", test_crc32__should__on_empty_string_return_0xffffffff},
-    {"test_crc32__should__on_words_return_crc32_jamcrc", test_crc32__should__on_words_return_crc32_jamcrc},
-    {"test_crc32str__should__on_empty_string_return_0xffffffff", test_crc32str__should__on_empty_string_return_0xffffffff},
-    {"test_crc32str__should__on_words_return_crc32_jamcrc", test_crc32str__should__on_words_return_crc32_jamcrc}
+    {"crc32 should return 0xffffffff on empty string", test_crc32__should__on_empty_string_return_0xffffffff},
+    {"crc32 should return crc32 jamcrc on words", test_crc32__should__on_words_return_crc32_jamcrc},
+    {"crc32str should return 0xffffffff on empty string", test_crc32str__should__on_empty_string_return_0xffffffff},
+    {"crc32str should return crc32 jamcrc on words", test_crc32str__should__on_words_return_crc32_jamcrc}
 };
 
 int main(void) {

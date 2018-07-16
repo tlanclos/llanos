@@ -36,9 +36,9 @@ static void test_get_llanos_vga__should__return_a_modifiable_vga(void) {
 
 
 testfunc_container_t test_function_containers[] = {
-    {"test_set_llanos_vga__should__set_a_copy_of_vga_structure", test_set_llanos_vga__should__set_a_copy_of_vga_structure},
+    {"set_llanos_vga should set a copy of vga structure", test_set_llanos_vga__should__set_a_copy_of_vga_structure},
 
-    {"test_get_llanos_vga__should__return_a_modifiable_vga", test_get_llanos_vga__should__return_a_modifiable_vga}
+    {"get_llanos_vga should return a modifiable vga", test_get_llanos_vga__should__return_a_modifiable_vga}
 };
 
 int main(void) {

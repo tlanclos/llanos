@@ -66,25 +66,25 @@ static void test_s8_min__should__equal_min_s8(void) {
 }
 
 testfunc_container_t test_function_containers[] = {
-    {"test_u64_max__should__equal_max_u64", test_u64_max__should__equal_max_u64},
-    {"test_u32_max__should__equal_max_u32", test_u32_max__should__equal_max_u32},
-    {"test_u16_max__should__equal_max_u16", test_u16_max__should__equal_max_u16},
-    {"test_u8_max__should__equal_max_u8", test_u8_max__should__equal_max_u8},
+    {"u64_max should equal max u64", test_u64_max__should__equal_max_u64},
+    {"u32_max should equal max u32", test_u32_max__should__equal_max_u32},
+    {"u16_max should equal max u16", test_u16_max__should__equal_max_u16},
+    {"u8_max should equal max u8", test_u8_max__should__equal_max_u8},
 
-    {"test_u64_min__should__equal_min_u64", test_u64_min__should__equal_min_u64},
-    {"test_u32_min__should__equal_min_u32", test_u32_min__should__equal_min_u32},
-    {"test_u16_min__should__equal_min_u16", test_u16_min__should__equal_min_u16},
-    {"test_u8_min__should__equal_min_u8", test_u8_min__should__equal_min_u8},
+    {"u64_min should equal min u64", test_u64_min__should__equal_min_u64},
+    {"u32_min should equal min u32", test_u32_min__should__equal_min_u32},
+    {"u16_min should equal min u16", test_u16_min__should__equal_min_u16},
+    {"u8_min should equal min u8", test_u8_min__should__equal_min_u8},
 
-    {"test_s64_max__should__equal_max_s64", test_s64_max__should__equal_max_s64},
-    {"test_s32_max__should__equal_max_s32", test_s32_max__should__equal_max_s32},
-    {"test_s16_max__should__equal_max_s16", test_s16_max__should__equal_max_s16},
-    {"test_s8_max__should__equal_max_s8", test_s8_max__should__equal_max_s8},
+    {"s64_max should equal max s64", test_s64_max__should__equal_max_s64},
+    {"s32_max should equal max s32", test_s32_max__should__equal_max_s32},
+    {"s16_max should equal max s16", test_s16_max__should__equal_max_s16},
+    {"s8_max should equal max s8", test_s8_max__should__equal_max_s8},
 
-    {"test_s64_min__should__equal_min_s64", test_s64_min__should__equal_min_s64},
-    {"test_s32_min__should__equal_min_s32", test_s32_min__should__equal_min_s32},
-    {"test_s16_min__should__equal_min_s16", test_s16_min__should__equal_min_s16},
-    {"test_s8_min__should__equal_min_s8", test_s8_min__should__equal_min_s8}
+    {"s64_min should equal min s64", test_s64_min__should__equal_min_s64},
+    {"s32_min should equal min s32", test_s32_min__should__equal_min_s32},
+    {"s16_min should equal min s16", test_s16_min__should__equal_min_s16},
+    {"s8_min should equal min s8", test_s8_min__should__equal_min_s8}
 };
 
 int main(void) {

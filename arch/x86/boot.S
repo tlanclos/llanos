@@ -41,5 +41,6 @@ _start:
     lea %esp, __stack_top
     /* multiboot info gets stored in %ebx by grub */
     mov [multiboot_info], %ebx
+    call initialize_architecture
     call kmain
     call halt

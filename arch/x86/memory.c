@@ -1,43 +1,28 @@
-#include <llanos/management/memory.h>
 #include <llanos/math.h>
 #include "multiboot.h"
+#include "memory.h"
 
 extern u32 __kernel_load_address;
 extern u32 __kernel_end_address;
 
-/**
- * @brief Get the address in which the kernel was loaded.
- *
- * @return address in which the kernel was loaded.
- */
-static u32 get_kernel_load_address(void) {
+u32 memory_get_kernel_load_address(void) {
     return (u32)&__kernel_load_address;
 }
 
-/**
- * @brief Get size of the kernel.
- *
- * @return the size of the kernel in bytes.
- */
-static u32 get_kernel_size(void) {
+u32 memory_get_kernel_size(void) {
     return (u32)&__kernel_end_address - (u32)&__kernel_load_address;
 }
 
-/**
- * @brief Get kernel address ranges.
- *
- * @param kernel_addresses Kernel address ranges as a range type.
- */
-static void get_kernel_addresses(range_t* kernel_addresses) {
+void memory_get_kernel_addresses(range_t* kernel_addresses) {
     range_init(
         kernel_addresses, 
-        (s64)get_kernel_load_address(),
-        (s64)get_kernel_load_address() + (s64)get_kernel_size()
+        (s64)memory_get_kernel_load_address(),
+        (s64)memory_get_kernel_load_address() + (s64)memory_get_kernel_size()
     );
 }
 
 /* TODO: would be nice if this was tested, but testing of this could come later */
-void get_memory_table(memory_table_t* memory_table) {
+void memory_get_table(memory_table_t* memory_table) {
     u64 tempbase;
     u64 templength;
     size_t entry_index;
@@ -47,7 +32,7 @@ void get_memory_table(memory_table_t* memory_table) {
     range_t memory_section;
 
     /* get kernel addresses for later usages */
-    get_kernel_addresses(&kernel_addresses);
+    memory_get_kernel_addresses(&kernel_addresses);
 
     memory_table->length = 0;
 

@@ -7,6 +7,8 @@ SECTIONS {
     .text BLOCK(4K) : ALIGN(4K) {
         KEEP(*(.multiboot))
         *(.interrupt_table)
+        *(.page_directory)
+        *(.page_tables)
         *(.text)
     }
 

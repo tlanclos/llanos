@@ -17,7 +17,7 @@ ISO := llanos.iso
 
 all: build
 
-build: testsuite $(TARGET) $(ISO)
+build: built-with testsuite $(TARGET) $(ISO)
 
 testsuite: FORCE
 	@$(MAKE) -C testsuite
@@ -61,5 +61,8 @@ clean: $(SUBDIRS:%=clean-%)
 	@$(MAKE) -C testsuite clean
 	@-rm -f $(TARGET)
 	@-rm -f $(ISO)
+
+built-with: FORCE
+	@echo "Cross Compile: $(CROSS_COMPILE)"
 
 FORCE:

@@ -23,8 +23,8 @@ paging_enable:
 
     push %eax
     mov %eax, %cr0
-    /* Enable paging (PG) bit and protection (PE) bit in cr0 */
-    or %eax, 0x80000001
+    /* Enable paging (PG) bit in cr0 */
+    or %eax, 0x80000000
     mov %cr0, %eax
     pop %eax
 
@@ -39,8 +39,8 @@ paging_disable:
 
     push %eax
     mov %eax, %cr0
-    /* Disable paging (PG) bit and protection (PE) bit in cr0 */
-    and %eax, 0x7ffffffe
+    /* Disable paging (PG) bit int cr0 */
+    and %eax, 0x7fffffff
     mov %cr0, %eax
     pop %eax
 

@@ -4,20 +4,35 @@
 
 typedef struct page_directory_entry_s page_directory_entry_t;
 typedef struct page_table_entry_s page_table_entry_t;
+typedef struct page_location_s page_location_t;
+typedef struct page_config_s page_config_t;
 typedef enum paging_access_e paging_access_t;
 typedef enum paging_write_type_e paging_write_type_t;
 typedef enum paging_page_size_e paging_page_size_t;
 
 struct page_directory_entry_s {
-    u8 config;
-    u8 custom : 4;
+    u16 config : 9;
+    u8 custom : 3;
     u32 page_table_base : 20;
 };
 
 struct page_table_entry_s {
-    u8 config;
-    u8 custom : 4;
+    u16 config : 9;
+    u8 custom : 3;
     u32 phys_page_addr : 20;
+};
+
+struct page_location_s {
+    u32 directory_num;
+    u32 table_num;
+    u32 page_num;
+    u32 page_base_addr;
+};
+
+struct page_config_s {
+    u32 page_size;
+    u32 page_table_size;
+    u32 page_directory_size;
 };
 
 enum paging_access_e {
@@ -110,10 +125,10 @@ extern void page_directory_set_size(page_directory_entry_t* entry, paging_page_s
 /**
  * @brief Set custom bits for OS specific use.
  *
- * There are 4 bits that can be used for custom use. The first 4 bits of the parameter custom will be used.
+ * There are 3 bits that can be used for custom use. The first 3 bits of the parameter custom will be used.
  *
  * @param entry entry to configure.
- * @param custom custom bits to set (only first 4 bits are used).
+ * @param custom custom bits to set (only first 3 bits are used).
  */
 extern void page_directory_set_custom(page_directory_entry_t* entry, u8 custom);
 
@@ -281,10 +296,10 @@ extern void page_table_set_global(page_table_entry_t* entry, bool global);
 /**
  * @brief Set custom bits for OS specific use.
  *
- * There are 4 bits that can be used for custom use. The first 4 bits of the parameter custom will be used.
+ * There are 3 bits that can be used for custom use. The first 3 bits of the parameter custom will be used.
  *
  * @param entry entry to configure.
- * @param custom custom bits to set (only first 4 bits are used).
+ * @param custom custom bits to set (only first 3 bits are used).
  */
 extern void page_table_set_custom(page_table_entry_t* entry, u8 custom);
 
@@ -295,9 +310,9 @@ extern void page_table_set_custom(page_table_entry_t* entry, u8 custom);
  * The first 20 bits are used, all other bits are ignored.
  *
  * @param entry entry to configure.
- * @param base base address of page table.
+ * @param address base address of page table.
  */
-extern void page_table_set_page_table_base(page_table_entry_t* entry, u32 base);
+extern void page_table_set_physical_page_address(page_table_entry_t* entry, u32 address);
 
 
 /**
@@ -378,7 +393,7 @@ extern u8 page_table_get_custom(page_table_entry_t* entry);
  * @param entry page directory entry.
  * @return page table base address (lower 20 bits only).
  */
-extern u32 page_table_get_page_table_base(page_table_entry_t* entry);
+extern u32 page_table_get_physical_page_address(page_table_entry_t* entry);
 
 
 /**
@@ -391,3 +406,14 @@ extern void paging_enable(void);
  * @brief Disable paging.
  */
 extern void paging_disable(void);
+
+
+/**
+ * @brief Get page location indicies.
+ *
+ * @param dest a location structure representing the location of the page. This function does
+ *      not adjust for whether or not the page exists.
+ * @param config page configuration structure specifying the page sizes/table sizes/directory sizes.
+ * @param address memory address to calculate the location of.
+ */
+extern void paging_address_location(page_location_t* dest, page_config_t* config, u64 address);

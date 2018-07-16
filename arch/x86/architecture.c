@@ -1,12 +1,13 @@
 #include <llanos/types.h>
-#include <llanos/management/architecture.h>
 #include <llanos/util/memory.h>
+#include <llanos/math.h>
 
 #include "gdt.h"
 #include "interrupt.h"
 #include "pic8259.h"
 #include "isrhandler.h"
 #include "paging.h"
+#include "memory.h"
 
 /* PIC start and end addresses [start, end) */
 #define PIC1_START_ADDRESS      32
@@ -41,8 +42,12 @@ static pic8259_t __pic2;
 /*
  * Paging Directory and Paging Tables
  */
-static page_directory_entry_t __page_directory[1024];
-static page_table_entry_t __page_tables[sizeof(__page_directory) / sizeof(page_directory_entry_t)][1024];
+static page_directory_entry_t __page_directory[1024] \
+    __attribute__((aligned(4096))) \
+    __attribute__((section(".page_directory")));
+static page_table_entry_t __page_tables[sizeof(__page_directory) / sizeof(page_directory_entry_t)][1024] \
+    __attribute__((aligned(4096))) \
+    __attribute__((section(".page_tables")));
 
 
 static void __generic_interrupt_handler(u32 isrnum) {
@@ -393,18 +398,114 @@ static void initialize_interrupt_functions(void) {
 
 
 static void initialize_paging(void) {
-    int i;
+    const page_config_t config = {
+        .page_size = 4096,
+        .page_table_size = 1024,
+        .page_directory_size = 1024
+    };
 
-    /* clear all entries in page directory */
-    for (i = 0; i < sizeof(__page_directory) / sizeof(page_directory_entry_t); i++) {
-        __page_directory[i] = 0;
+    page_location_t location;
+    range_t kernel_addresses;
+    memory_table_t memory_table;
+    range_t memory_range;
+
+    /* get kernel addresses */
+    memory_get_kernel_addresses(&kernel_addresses);
+
+    /* get memory table for use addresses */
+    memory_get_table(&memory_table);
+
+    /* setup page directories to point to page tables */
+    for (u64 page = 0; page < config.page_directory_size; page++) {
+        page_directory_set_present(&__page_directory[page], true);
+        page_directory_set_permissions(&__page_directory[page], PAGING_SUPERVISOR_READ_WRITE);
+        page_directory_set_write_type(&__page_directory[page], PAGING_WRITE_TYPE_WRITE_THROUGH);
+        page_directory_enable_caching(&__page_directory[page], false);
+        page_directory_set_accessed(&__page_directory[page], false);
+        page_directory_set_size(&__page_directory[page], PAGING_PAGE_SIZE_4K);
+        page_directory_set_page_table_base(&__page_directory[page], (u32)&__page_tables[page]);
     }
+
+    /*
+     * Setup paging for the first 1M of memory.
+     * This memory should always exist.
+     */
+    for (u64 addr = 0; addr < 1048576; addr += config.page_size) {
+        paging_address_location(&location, (page_config_t*)&config, addr);
+
+        if (location.directory_num > 0) {
+            break;
+        } else {
+            page_table_set_present(&__page_tables[location.table_num][location.page_num], true);
+            page_table_set_permissions(&__page_tables[location.table_num][location.page_num], PAGING_SUPERVISOR_READ_WRITE);
+            page_table_set_write_type(&__page_tables[location.table_num][location.page_num], PAGING_WRITE_TYPE_WRITE_THROUGH);
+            page_table_enable_caching(&__page_tables[location.table_num][location.page_num], false);
+            page_table_set_accessed(&__page_tables[location.table_num][location.page_num], false);
+            page_table_set_dirty(&__page_tables[location.table_num][location.page_num], false);
+            page_table_set_global(&__page_tables[location.table_num][location.page_num], true);
+            page_table_set_physical_page_address(&__page_tables[location.table_num][location.page_num], location.page_base_addr);
+        }
+    }
+
+    /*
+     * Setup paging for the rest of the memory up to 4G.
+     * This memory may not exist, so we will need to check if we can assign a full page to each piece of memory.
+     */
+    for (u64 addr = 1048576; addr < 4294967296; addr += config.page_size) {
+        paging_address_location(&location, (page_config_t*)&config, addr);
+
+        if (location.directory_num > 0) {
+            break;
+        } else if (in_range(addr, &kernel_addresses)) {
+            page_table_set_present(&__page_tables[location.table_num][location.page_num], true);
+            page_table_set_permissions(&__page_tables[location.table_num][location.page_num], PAGING_SUPERVISOR_READ_WRITE);
+            page_table_set_write_type(&__page_tables[location.table_num][location.page_num], PAGING_WRITE_TYPE_WRITE_BACK);
+            page_table_enable_caching(&__page_tables[location.table_num][location.page_num], true);
+            page_table_set_accessed(&__page_tables[location.table_num][location.page_num], false);
+            page_table_set_dirty(&__page_tables[location.table_num][location.page_num], false);
+            page_table_set_global(&__page_tables[location.table_num][location.page_num], true);
+            page_table_set_physical_page_address(&__page_tables[location.table_num][location.page_num], location.page_base_addr);
+        } else {
+            int i;
+
+            for (i = 0; i < memory_table.length; i++) {
+                range_init(&memory_range, memory_table.entries[i].base, memory_table.entries[i].base + memory_table.entries[i].length);
+
+                if (in_range(addr, &memory_range)) {
+                    page_table_set_present(&__page_tables[location.table_num][location.page_num], true);
+                    page_table_set_permissions(&__page_tables[location.table_num][location.page_num], PAGING_SUPERVISOR_READ_WRITE);
+                    page_table_set_write_type(&__page_tables[location.table_num][location.page_num], PAGING_WRITE_TYPE_WRITE_BACK);
+                    page_table_enable_caching(&__page_tables[location.table_num][location.page_num], true);
+                    page_table_set_accessed(&__page_tables[location.table_num][location.page_num], false);
+                    page_table_set_dirty(&__page_tables[location.table_num][location.page_num], false);
+                    page_table_set_global(&__page_tables[location.table_num][location.page_num], true);
+                    page_table_set_physical_page_address(&__page_tables[location.table_num][location.page_num], location.page_base_addr);
+                    break;
+                }
+            }
+
+            /* the loop above did not break */
+            if (i >= memory_table.length) {
+                page_table_set_present(&__page_tables[location.table_num][location.page_num], false);
+                page_table_set_permissions(&__page_tables[location.table_num][location.page_num], PAGING_USER_READ_WRITE);
+                page_table_set_write_type(&__page_tables[location.table_num][location.page_num], PAGING_WRITE_TYPE_WRITE_BACK);
+                page_table_enable_caching(&__page_tables[location.table_num][location.page_num], true);
+                page_table_set_accessed(&__page_tables[location.table_num][location.page_num], false);
+                page_table_set_dirty(&__page_tables[location.table_num][location.page_num], false);
+                page_table_set_global(&__page_tables[location.table_num][location.page_num], false);
+                page_table_set_physical_page_address(&__page_tables[location.table_num][location.page_num], location.page_base_addr);
+            }
+        }
+    }
+
+    paging_set_page_directory(__page_directory);
+    paging_enable();
 }
 
 void initialize_architecture(void) {
+    initialize_paging();
     initialize_global_descriptor_table();
     initialize_pic();
     initialize_interrupt_descriptor_table();
     initialize_interrupt_functions();
-    initialize_paging();
 }

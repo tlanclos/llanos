@@ -506,6 +506,7 @@ void initialize_architecture(void) {
     initialize_paging();
     initialize_global_descriptor_table();
     initialize_pic();
-    initialize_interrupt_descriptor_table();
-    initialize_interrupt_functions();
+    // todo: fix interrupts
+    // initialize_interrupt_descriptor_table();
+    // initialize_interrupt_functions();
 }

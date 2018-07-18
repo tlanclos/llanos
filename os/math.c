@@ -109,14 +109,14 @@ u64 divmod_u64(u64 numerator, u64 denominator, u64* remainder) {
             *remainder = 0;
         }
         return 0;
-    } else if (numerator == 0) {
+    } else if (numerator == 0 || numerator < denominator) {
         /*
-         * if the numerator is 0, then
-         * the result is 0 and the
+         * if the numerator is 0 or numerator < denominator, then
+         * the result is the numerator and the
          * remainder is the denominator
          */
         if (remainder != NULL) {
-            *remainder = denominator;
+            *remainder = numerator;
         }
         return 0;
     } else {

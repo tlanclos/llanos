@@ -337,6 +337,16 @@ static void test_divmod_u64__should__handle_max_u64_modulus_result(void) {
     TEST_ASSERT_EQUAL(1, rem);
 }
 
+static void test_divmod_u64__should__handle_numerator_lessthan_denominator_division_result(void) {
+    TEST_ASSERT_EQUAL(0, divmod_u64(1, 10, NULL));
+}
+
+static void test_divmod_u64__should__handle_numerator_lessthan_denominator_modulus_result(void) {
+    u64 rem;
+    divmod_u64(1, 10, &rem);
+    TEST_ASSERT_EQUAL(1, rem);
+}
+
 static void test_modulus_u64__should__return_0_on_undefined_result(void) {
     TEST_ASSERT_EQUAL(0, modulus_u64(10000, 0));
 }
@@ -353,6 +363,10 @@ static void test_modulus_u64__should__handle_max_u64_modulus_result(void) {
     TEST_ASSERT_EQUAL(1, modulus_u64(0xffffffffffffffff, 0xfffffffffffffffe));
 }
 
+static void test_modulus_u64__should__handle_numerator_lessthan_denominator_modulus_result(void) {
+    TEST_ASSERT_EQUAL(1, modulus_u64(1, 10));
+}
+
 static void test_divide_u64__should__return_0_on_undefined_result(void) {
     TEST_ASSERT_EQUAL(0, divide_u64(10000, 0));
 }
@@ -367,6 +381,10 @@ static void test_divide_u64__should__return_1_if_numerator_and_denominator_are_e
 
 static void test_divide_u64__should__handle_max_u64_divide_result(void) {
     TEST_ASSERT_EQUAL(1, divide_u64(0xffffffffffffffff, 0xfffffffffffffffe));
+}
+
+static void test_divide_u64__should__handle_numerator_lessthan_denominator_divide_result(void) {
+    TEST_ASSERT_EQUAL(0, divide_u64(1, 10));
 }
 
 testfunc_container_t test_function_containers[] = {
@@ -419,16 +437,20 @@ testfunc_container_t test_function_containers[] = {
     {"divmod_u64 should set remainder equal 0 if numerator and denominator are equal", test_divmod_u64__should__set_remainder_equal_0_if_numerator_and_denominator_are_equal},
     {"divmod_u64 should handle max u64 division result", test_divmod_u64__should__handle_max_u64_division_result},
     {"divmod_u64 should handle max u64 modulus result", test_divmod_u64__should__handle_max_u64_modulus_result},
+    {"divmod_u64 should handle numerator < denominator division result", test_divmod_u64__should__handle_numerator_lessthan_denominator_division_result},
+    {"divmod_u64 should handle numerator < denominator modulus result", test_divmod_u64__should__handle_numerator_lessthan_denominator_modulus_result},
 
     {"modulus_u64 should return 0 on undefined result", test_modulus_u64__should__return_0_on_undefined_result},
     {"modulus_u64 should return result of modulus", test_modulus_u64__should__return_result_of_modulus},
     {"modulus_u64 should return 0 if numerator and denominator are equal", test_modulus_u64__should__return_0_if_numerator_and_denominator_are_equal},
     {"modulus_u64 should handle max u64 modulus result", test_modulus_u64__should__handle_max_u64_modulus_result},
+    {"modulus_u64 should handle numerator < denominator modulus result", test_modulus_u64__should__handle_numerator_lessthan_denominator_modulus_result},
 
     {"divide_u64 should return 0 on undefined result", test_divide_u64__should__return_0_on_undefined_result},
     {"divide_u64 should return result of divide", test_divide_u64__should__return_result_of_divide},
     {"divide_u64 should return 1 if numerator and denominator are equal", test_divide_u64__should__return_1_if_numerator_and_denominator_are_equal},
     {"divide_u64 should handle max u64 divide result", test_divide_u64__should__handle_max_u64_divide_result},
+    {"divide_u64 should handle numerator < denominator divide result", test_divide_u64__should__handle_numerator_lessthan_denominator_divide_result}
 };
 
 int main(void) {
